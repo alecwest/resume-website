@@ -9,17 +9,38 @@ import { SheetsService } from './sheets.service';
 export class AppComponent implements OnInit {
   title = 'website';
 
-  constructor(private sheetsService: SheetsService) { }
+  sheetsData: SheetsServiceResponse;
+
+  constructor(private sheetsService: SheetsService) {}
 
   ngOnInit() {
-    this.sheetsService.getSheets(
-      {sheetName: 'basic-info', start: 'A2', end: 'B'},
-      {sheetName: 'education', start: 'A2', end: 'G'},
-      {sheetName: 'work-experience', start: 'A2', end: 'G'},
-      {sheetName: 'skills', start: 'A2', end: 'B'},
-      {sheetName: 'projects', start: 'A2', end: 'D'},
-    ).subscribe(resp => {
-      console.log(resp);
-    });
+    this.sheetsService
+      .getSheets(
+        { sheetName: 'AboutMe', start: 'A2', end: 'B' },
+        { sheetName: 'Education', start: 'A2', end: 'G' },
+        { sheetName: 'WorkHistory', start: 'A2', end: 'G' },
+        { sheetName: 'Skills', start: 'A2', end: 'B' },
+        { sheetName: 'Projects', start: 'A2', end: 'D' }
+      )
+      .subscribe((resp) => {
+        console.log(resp);
+        this.sheetsData = resp;
+      });
+  }
+
+  getPageName(sheet: Sheet): string {
+    return sheet.range.split('!')[0].replace(/([a-z])([A-Z])/, '$1 $2');
   }
 }
+
+export interface SheetsServiceResponse {
+  spreadsheetId: string;
+  valueRanges: Sheet[];
+}
+
+export interface Sheet {
+  majorDimension: string;
+  range: string;
+  values: string[];
+}
+
