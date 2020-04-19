@@ -1,21 +1,75 @@
 <header class="header header-3">
   <div class="branding">
-      <a href="..." class="nav-link">
-          <clr-icon shape="flame"></clr-icon>
-          <span class="title">This could be my name</span>
-      </a>
+    <a href="..." class="nav-link">
+      <clr-icon shape="flame"></clr-icon>
+      <span class="title">This could be my name</span>
+    </a>
   </div>
   <div class="header-actions">
-      <a href="..." class="nav-link nav-text">
-          This could be my email, but I don't wanna hardcode anything
-      </a>
+    <a href="..." class="nav-link nav-text">
+      This could be my email, but I don't wanna hardcode anything
+    </a>
   </div>
 </header>
 
 <nav class="subnav">
   <ul class="nav">
-      <li class="nav-item" *ngFor="let sheet of sheetsData.valueRanges">
-          <a class="nav-link" href="#">{{ getPageName(sheet) }}</a>
-      </li>
+    <li class="nav-item" *ngFor="let sheet of sheetsData?.valueRanges">
+      <a class="nav-link" href="#">{{ getPageName(sheet) }}</a>
+    </li>
   </ul>
 </nav>
+
+<!-- Card Style Data -->
+<div class="clr-row" *ngFor="let sheet of sheetsData?.valueRanges">
+  <div class="clr-col-lg-6 clr-offset-lg-3 clr-col-12">
+    <div class="card">
+      <div class="card-header">
+        {{ getPageName(sheet) }}
+      </div>
+      <div class="card-block">
+        <div class="card-text">
+          <ng-container
+            *ngTemplateOutlet="
+              sheet.values[0][0][0] === '#' ? verticalTable : table;
+              context: { $implicit: sheet }">
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #table let-sheet>
+  <table class="table">
+    <thead>
+      <tr>
+        <th *ngFor="let header of (sheet?.values)[0]">
+          {{ header | titlecase }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of sheet?.values | slice: 1">
+        <td *ngFor="let value of row">
+          {{ value }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>
+
+<ng-template #verticalTable let-sheet>
+  <table class="table table-vertical">
+    <tbody>
+      <tr *ngFor="let row of sheet?.values | slice: 1">
+        <th>
+          {{ row[0] | titlecase }}
+        </th>
+        <td *ngFor="let value of row | slice: 1">
+          {{ value }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SheetsService } from './sheets.service';
+import { SheetsService, SheetsServiceResponse, Sheet } from './sheets.service';
 
 @Component({
   selector: 'app-root',
@@ -16,11 +16,11 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.sheetsService
       .getSheets(
-        { sheetName: 'AboutMe', start: 'A2', end: 'B' },
-        { sheetName: 'Education', start: 'A2', end: 'G' },
-        { sheetName: 'WorkHistory', start: 'A2', end: 'G' },
-        { sheetName: 'Skills', start: 'A2', end: 'B' },
-        { sheetName: 'Projects', start: 'A2', end: 'D' }
+        { sheetName: 'AboutMe', start: 'A', end: 'B' },
+        { sheetName: 'Education', start: 'A', end: 'G' },
+        { sheetName: 'WorkHistory', start: 'A', end: 'G' },
+        { sheetName: 'Skills', start: 'A', end: 'B' },
+        { sheetName: 'Projects', start: 'A', end: 'D' }
       )
       .subscribe((resp) => {
         console.log(resp);
@@ -31,16 +31,5 @@ export class AppComponent implements OnInit {
   getPageName(sheet: Sheet): string {
     return sheet.range.split('!')[0].replace(/([a-z])([A-Z])/, '$1 $2');
   }
-}
-
-export interface SheetsServiceResponse {
-  spreadsheetId: string;
-  valueRanges: Sheet[];
-}
-
-export interface Sheet {
-  majorDimension: string;
-  range: string;
-  values: string[];
 }
 

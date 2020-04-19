@@ -7,6 +7,17 @@ const SHEETS_API_URL =
   'https://sheets.googleapis.com/v4/spreadsheets/1ApMZjOSf4HLBVSRa0Rmb0AFW2MNNAvH4abzVTkGkEWk/values';
 const KEY = 'AIzaSyCeL3mq1JY9OI6iuMxT-TN2334OM1YwSTo';
 
+export interface SheetsServiceResponse {
+  spreadsheetId: string;
+  valueRanges: Sheet[];
+}
+
+export interface Sheet {
+  majorDimension: string;
+  range: string;
+  values: string[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -21,12 +32,12 @@ export class SheetsService {
     return this.http.get(url);
   }
 
-  getSheets(...sheets: SheetRange[]): Observable<any> {
+  getSheets(...sheets: SheetRange[]): Observable<SheetsServiceResponse> {
     const ranges = sheets.map(
       (sheet) => `&ranges=${this.formatSheetRangeParam(sheet)}`
     ).join('');
     const url = `${SHEETS_API_URL}:batchGet?key=${KEY}${ranges}`;
-    return this.http.get(url);
+    return this.http.get<SheetsServiceResponse>(url);
   }
 
   private formatSheetRangeParam(sheet: SheetRange) {
