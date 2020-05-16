@@ -15,7 +15,7 @@ export interface SheetsServiceResponse {
 export interface Sheet {
   majorDimension: string;
   range: string;
-  values: string[];
+  values: string[][];
 }
 
 @Injectable({

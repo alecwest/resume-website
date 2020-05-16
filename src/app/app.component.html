@@ -29,13 +29,29 @@
       </div>
       <div class="card-block">
         <div class="card-text">
-          <ng-container
-            *ngTemplateOutlet="
-              isRowCommented(sheet.values[0]) ? verticalTable : table;
-              context: { $implicit: sheet }
-            "
-          >
-          </ng-container>
+          <clr-datagrid>
+            <ng-container *ngFor="let columnName of getColumnNames(sheet)">
+              <clr-dg-column [clrDgField]="columnName">
+                {{ columnName }}
+              </clr-dg-column>
+            </ng-container>
+
+            <clr-dg-row *clrDgItems="let row of getDataRows(sheet); let i = index" [clrDgItem]="row">
+              <clr-dg-cell *ngFor="let value of getRowCells(sheet, i)">
+                <ng-container *ngTemplateOutlet="tableData; context: { $implicit: value }"></ng-container>
+              </clr-dg-cell>
+
+              <clr-dg-row-detail *clrIfExpanded>
+                <ul class="list-unstyled">
+                  <ng-container *ngFor="let detail of getDetailCells(sheet, i); let i = index">
+                    <li *ngFor="let line of detail.split('\n')">
+                      {{ line }}
+                    </li>
+                  </ng-container>
+                </ul>
+              </clr-dg-row-detail>
+            </clr-dg-row>
+          </clr-datagrid>
         </div>
       </div>
     </div>
