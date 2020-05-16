@@ -31,5 +31,20 @@ export class AppComponent implements OnInit {
   getPageName(sheet: Sheet): string {
     return sheet.range.split('!')[0].replace(/([a-z])([A-Z])/, '$1 $2');
   }
+
+  isRowCommented(row: string[]) {
+    return row.some(element => element.includes('#'));
+  }
+
+  isLargeText(element: string) {
+    return element.includes('>');
+  }
+
+  getIconClass(element: string) {
+    return {
+      technical: 'code',
+      personal: 'user'
+    }[element];
+  }
 }
 

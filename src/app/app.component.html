@@ -31,8 +31,10 @@
         <div class="card-text">
           <ng-container
             *ngTemplateOutlet="
-              sheet.values[0][0][0] === '#' ? verticalTable : table;
-              context: { $implicit: sheet }">
+              isRowCommented(sheet.values[0]) ? verticalTable : table;
+              context: { $implicit: sheet }
+            "
+          >
           </ng-container>
         </div>
       </div>
@@ -52,7 +54,7 @@
     <tbody>
       <tr *ngFor="let row of sheet?.values | slice: 1">
         <td *ngFor="let value of row">
-          {{ value }}
+          <ng-container *ngTemplateOutlet="tableData; context: { $implicit: value }"></ng-container>
         </td>
       </tr>
     </tbody>
@@ -67,9 +69,19 @@
           {{ row[0] | titlecase }}
         </th>
         <td *ngFor="let value of row | slice: 1">
-          {{ value }}
+          <ng-container *ngTemplateOutlet="tableData; context: { $implicit: value }"></ng-container>
         </td>
       </tr>
     </tbody>
   </table>
+</ng-template>
+
+<ng-template #tableData let-data>
+  <clr-icon
+    *ngIf="getIconClass(data); else normal"
+    attr.shape="{{ getIconClass(data) }}"
+  ></clr-icon>
+  <ng-template #normal>
+    {{ data }}
+  </ng-template>
 </ng-template>
