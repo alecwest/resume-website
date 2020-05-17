@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
   }
 
   columnIsEmpty(sheet: Sheet, columnIndex: number): boolean {
-    return sheet.values.slice(1).every(row => {
+    return sheet.values.slice(1).every((row) => {
       return columnIndex >= row.length || row[columnIndex] === '';
     });
   }
@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
   }
 
   isDataGridSheet(sheet: Sheet): boolean {
-    return sheet.values.some(row => row.some(cell => this.isLargeText(cell)));
+    return this.someCell(sheet, (cell) => this.isLargeText(cell));
   }
 
   isVerticalTableSheet(sheet: Sheet) {
@@ -74,10 +74,18 @@ export class AppComponent implements OnInit {
     });
   }
 
+  isIconSheet(sheet: Sheet): boolean {
+    return this.someCell(sheet, (cell) => this.getIconClass(cell) != null);
+  }
+
   getIconClass(element: string) {
     return {
       technical: 'code',
       personal: 'user',
     }[element];
+  }
+
+  private someCell(sheet, callback: (cell: string) => boolean): boolean {
+    return sheet.values.some((row) => row.some(callback));
   }
 }
