@@ -59,8 +59,8 @@ export class AppComponent implements OnInit {
     return sheet.values.some(row => row.some(cell => this.isLargeText(cell)));
   }
 
-  isRowCommented(row: string[]) {
-    return row.some((element) => element.includes('#'));
+  isVerticalTableSheet(sheet: Sheet) {
+    return sheet.values[0].some((element) => element.includes('#'));
   }
 
   isLargeText(element: string) {

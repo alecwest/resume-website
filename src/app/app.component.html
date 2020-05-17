@@ -33,7 +33,7 @@
             *ngTemplateOutlet="
               isDataGridSheet(sheet)
                 ? dataGrid
-                : isRowCommented(sheet.values[0])
+                : isVerticalTableSheet(sheet)
                 ? verticalTable
                 : table;
               context: { $implicit: sheet }
@@ -82,14 +82,14 @@
   <table class="table">
     <thead>
       <tr>
-        <th *ngFor="let header of (sheet?.values)[0]">
-          {{ header | titlecase }}
+        <th *ngFor="let columnName of getColumnNames(sheet)">
+          {{ columnName | titlecase }}
         </th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let row of sheet?.values | slice: 1">
-        <td *ngFor="let value of row">
+      <tr *ngFor="let row of getDataRows(sheet); let i = index">
+        <td *ngFor="let value of getRowCells(sheet, i)">
           <ng-container
             *ngTemplateOutlet="tableData; context: { $implicit: value }"
           ></ng-container>
@@ -102,7 +102,7 @@
 <ng-template #verticalTable let-sheet>
   <table class="table table-vertical">
     <tbody>
-      <tr *ngFor="let row of sheet?.values | slice: 1">
+      <tr *ngFor="let row of getDataRows(sheet)">
         <th>
           {{ row[0] | titlecase }}
         </th>
