@@ -30,14 +30,12 @@ export class AppComponent implements OnInit {
 
   getColumnNames(sheet: Sheet): string[] {
     return sheet.values[0].filter((column, index) => {
-      console.log(column, index);
       return !this.isLargeText(column) && !this.columnIsEmpty(sheet, index);
     });
   }
 
   columnIsEmpty(sheet: Sheet, columnIndex: number): boolean {
     return sheet.values.slice(1).every(row => {
-      console.log(row, columnIndex, columnIndex >= row.length, row[columnIndex] === '');
       return columnIndex >= row.length || row[columnIndex] === '';
     });
   }
@@ -55,6 +53,10 @@ export class AppComponent implements OnInit {
 
   getPageName(sheet: Sheet): string {
     return sheet.range.split('!')[0].replace(/([a-z])([A-Z])/, '$1 $2');
+  }
+
+  isDataGridSheet(sheet: Sheet): boolean {
+    return sheet.values.some(row => row.some(cell => this.isLargeText(cell)));
   }
 
   isRowCommented(row: string[]) {

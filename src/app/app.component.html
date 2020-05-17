@@ -29,34 +29,54 @@
       </div>
       <div class="card-block">
         <div class="card-text">
-          <clr-datagrid>
-            <ng-container *ngFor="let columnName of getColumnNames(sheet)">
-              <clr-dg-column [clrDgField]="columnName">
-                {{ columnName }}
-              </clr-dg-column>
-            </ng-container>
-
-            <clr-dg-row *clrDgItems="let row of getDataRows(sheet); let i = index" [clrDgItem]="row">
-              <clr-dg-cell *ngFor="let value of getRowCells(sheet, i)">
-                <ng-container *ngTemplateOutlet="tableData; context: { $implicit: value }"></ng-container>
-              </clr-dg-cell>
-
-              <clr-dg-row-detail *clrIfExpanded>
-                <ul class="list-unstyled">
-                  <ng-container *ngFor="let detail of getDetailCells(sheet, i); let i = index">
-                    <li *ngFor="let line of detail.split('\n')">
-                      {{ line }}
-                    </li>
-                  </ng-container>
-                </ul>
-              </clr-dg-row-detail>
-            </clr-dg-row>
-          </clr-datagrid>
+          <ng-container
+            *ngTemplateOutlet="
+              isDataGridSheet(sheet)
+                ? dataGrid
+                : isRowCommented(sheet.values[0])
+                ? verticalTable
+                : table;
+              context: { $implicit: sheet }
+            "
+          ></ng-container>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #dataGrid let-sheet>
+  <clr-datagrid>
+    <ng-container *ngFor="let columnName of getColumnNames(sheet)">
+      <clr-dg-column [clrDgField]="columnName">
+        {{ columnName | titlecase }}
+      </clr-dg-column>
+    </ng-container>
+
+    <clr-dg-row
+      *clrDgItems="let row of getDataRows(sheet); let i = index"
+      [clrDgItem]="row"
+    >
+      <clr-dg-cell *ngFor="let value of getRowCells(sheet, i)">
+        <ng-container
+          *ngTemplateOutlet="tableData; context: { $implicit: value }"
+        ></ng-container>
+      </clr-dg-cell>
+
+      <clr-dg-row-detail *clrIfExpanded>
+        <ul class="list-unstyled">
+          <ng-container
+            *ngFor="let detail of getDetailCells(sheet, i); let i = index"
+          >
+            <li *ngFor="let line of detail.split('\n')">
+              {{ line }}
+            </li>
+          </ng-container>
+        </ul>
+      </clr-dg-row-detail>
+    </clr-dg-row>
+  </clr-datagrid>
+</ng-template>
 
 <ng-template #table let-sheet>
   <table class="table">
@@ -70,7 +90,9 @@
     <tbody>
       <tr *ngFor="let row of sheet?.values | slice: 1">
         <td *ngFor="let value of row">
-          <ng-container *ngTemplateOutlet="tableData; context: { $implicit: value }"></ng-container>
+          <ng-container
+            *ngTemplateOutlet="tableData; context: { $implicit: value }"
+          ></ng-container>
         </td>
       </tr>
     </tbody>
@@ -85,7 +107,9 @@
           {{ row[0] | titlecase }}
         </th>
         <td *ngFor="let value of row | slice: 1">
-          <ng-container *ngTemplateOutlet="tableData; context: { $implicit: value }"></ng-container>
+          <ng-container
+            *ngTemplateOutlet="tableData; context: { $implicit: value }"
+          ></ng-container>
         </td>
       </tr>
     </tbody>
