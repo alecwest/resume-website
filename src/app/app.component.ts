@@ -39,19 +39,22 @@ export class AppComponent implements OnInit {
     return sheet.metadata.columns;
   }
 
-  columnIsEmpty(sheet: Sheet, columnIndex: number): boolean {
-    return sheet.values.slice(1).every((row) => {
-      return columnIndex >= row.length || row[columnIndex] === '';
-    });
+  getLargeColumnNames(sheet: ParsedSheet): string[] {
+    return sheet.metadata.largeTextColumns;
   }
 
   getDataLayout(sheet: ParsedSheet): TemplateRef<any> {
     switch (sheet.metadata.layout) {
-      case 'dataGrid': return this.dataGridTemplate;
-      case 'iconGrid': return this.iconGridTemplate;
-      case 'table': return this.tableTemplate;
-      case 'verticalTable': return this.verticalTableTemplate;
-      default: return this.tableTemplate;
+      case 'dataGrid':
+        return this.dataGridTemplate;
+      case 'iconGrid':
+        return this.iconGridTemplate;
+      case 'table':
+        return this.tableTemplate;
+      case 'verticalTable':
+        return this.verticalTableTemplate;
+      default:
+        return this.tableTemplate;
     }
   }
 
@@ -60,24 +63,16 @@ export class AppComponent implements OnInit {
   }
 
   getRowCells(sheet: ParsedSheet, rowIndex: number): string[] {
-    const columns = sheet.values[0];
+    const columnNames = this.getColumnNames(sheet);
     return this.getDataRows(sheet)[rowIndex].filter((_, index) => {
-      return !this.isLargeText(columns[index]);
+      return columnNames.includes(sheet.values[0][index]);
     });
   }
 
-  getPageName(sheet: Sheet): string {
-    return sheet.range.split('!')[0].replace(/([a-z])([A-Z])/, '$1 $2');
-  }
-
-  isLargeText(element: string) {
-    return element.length > 60;
-  }
-
   getDetailCells(sheet: ParsedSheet, rowIndex: number): string[] {
-    const columns = sheet.values[0];
+    const columnNames = this.getLargeColumnNames(sheet);
     return this.getDataRows(sheet)[rowIndex].filter((_, index) => {
-      return this.isLargeText(columns[index]);
+      return columnNames.includes(sheet.values[0][index]);
     });
   }
 

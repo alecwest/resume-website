@@ -12,6 +12,7 @@ export interface Metadata {
   layout: string;
   header: string;
   columns: string[];
+  largeTextColumns: string[];
 }
 
 export interface Sheets {
@@ -60,6 +61,9 @@ export class SheetsService {
       return {
         header: metadataKeyValue.header,
         columns: metadataKeyValue.columns.split(','),
+        largeTextColumns: metadataKeyValue.largeTextColumns
+          ? metadataKeyValue.largeTextColumns.split(',')
+          : [],
         layout: metadataKeyValue.layout,
       };
     }
@@ -68,20 +72,21 @@ export class SheetsService {
       .map((sheet) => `&ranges=${this.formatSheetRangeParam(sheet)}`)
       .join('');
     const url = `${SHEETS_URL_PREFIX}/${spreadsheetId}/values:batchGet?key=${KEY}${ranges}`;
+
     return this.http.get<Sheets>(url).pipe(
       map((resp: Sheets) => {
-        return resp.valueRanges.map(sheet => {
+        return resp.valueRanges.map((sheet) => {
           const metadata = parseMetadata(sheet);
-          const columnIndices = metadata.columns.map(header =>
-            sheet.values[0].indexOf(header)
-          );
+          const columnIndices = metadata.columns
+            .concat(metadata.largeTextColumns)
+            .map((header) => sheet.values[0].indexOf(header));
           return {
             metadata,
             majorDimension: sheet.majorDimension,
             range: sheet.range,
-            values: sheet.values.map(row => {
+            values: sheet.values.map((row) => {
               return row.filter((_, index) => columnIndices.includes(index));
-            })
+            }),
           } as ParsedSheet;
         });
       })

@@ -30,7 +30,10 @@
       <div class="card-block">
         <div class="card-text">
           <ng-container
-            *ngTemplateOutlet="getDataLayout(sheet); context: { $implicit: sheet }"
+            *ngTemplateOutlet="
+              getDataLayout(sheet);
+              context: { $implicit: sheet }
+            "
           ></ng-container>
         </div>
       </div>
@@ -56,9 +59,7 @@
 
       <clr-dg-row-detail *clrIfExpanded>
         <ul class="list-unstyled">
-          <ng-container
-            *ngFor="let detail of getDetailCells(sheet, i); let i = index"
-          >
+          <ng-container *ngFor="let detail of getDetailCells(sheet, i)">
             <li *ngFor="let line of detail.split('\n')">
               {{ line }}
             </li>
@@ -73,7 +74,7 @@
   <div class="clr-row">
     <ng-container *ngFor="let row of getDataRows(sheet); let i = index">
       <div class="clr-col">
-        <h4> {{ row[0] | titlecase }}</h4>
+        <h4>{{ row[0] | titlecase }}</h4>
         <clr-icon attr.shape="{{ getIconClass(row[1]) }}"></clr-icon>
       </div>
       <div class="clr-break-row" *ngIf="i % 3 === 2"></div>
@@ -103,12 +104,12 @@
 <ng-template #verticalTable let-sheet>
   <table class="table table-vertical">
     <tbody>
-      <tr *ngFor="let row of getDataRows(sheet)">
+      <tr *ngFor="let columnName of getColumnNames(sheet); let i = index">
         <th>
-          {{ row[0] | titlecase }}
+          {{ columnName | titlecase }}
         </th>
-        <td *ngFor="let value of row | slice: 1">
-          {{ value }}
+        <td>
+          {{ sheet.values[1][i] }}
         </td>
       </tr>
     </tbody>
