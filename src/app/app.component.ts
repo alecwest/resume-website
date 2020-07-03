@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { SheetsService, Sheets, Sheet, ParsedSheet } from './sheets.service';
+import { SheetsService, ParsedSheet, RowData } from './sheets.service';
 
 @Component({
   selector: 'app-root',
@@ -58,22 +58,8 @@ export class AppComponent implements OnInit {
     }
   }
 
-  getDataRows(sheet: ParsedSheet): string[][] {
-    return sheet.values.slice(1);
-  }
-
-  getRowCells(sheet: ParsedSheet, rowIndex: number): string[] {
-    const columnNames = this.getColumnNames(sheet);
-    return this.getDataRows(sheet)[rowIndex].filter((_, index) => {
-      return columnNames.includes(sheet.values[0][index]);
-    });
-  }
-
-  getDetailCells(sheet: ParsedSheet, rowIndex: number): string[] {
-    const columnNames = this.getLargeColumnNames(sheet);
-    return this.getDataRows(sheet)[rowIndex].filter((_, index) => {
-      return columnNames.includes(sheet.values[0][index]);
-    });
+  getDataRows(sheet: ParsedSheet): RowData[] {
+    return sheet.values;
   }
 
   getIconClass(element: string) {

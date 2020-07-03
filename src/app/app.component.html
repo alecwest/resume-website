@@ -50,17 +50,17 @@
     </ng-container>
 
     <clr-dg-row
-      *clrDgItems="let row of getDataRows(sheet); let i = index"
+      *clrDgItems="let row of getDataRows(sheet)"
       [clrDgItem]="row"
     >
-      <clr-dg-cell *ngFor="let value of getRowCells(sheet, i)">
-        {{ value }}
+      <clr-dg-cell *ngFor="let columnName of getColumnNames(sheet)">
+        {{ row[columnName] }}
       </clr-dg-cell>
 
       <clr-dg-row-detail *clrIfExpanded>
         <ul class="list-unstyled">
-          <ng-container *ngFor="let detail of getDetailCells(sheet, i)">
-            <li *ngFor="let line of detail.split('\n')">
+          <ng-container *ngFor="let detailColumn of getLargeColumnNames(sheet)">
+            <li *ngFor="let line of row[detailColumn].split('\n')">
               {{ line }}
             </li>
           </ng-container>
@@ -92,9 +92,9 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let row of getDataRows(sheet); let i = index">
-        <td *ngFor="let value of getRowCells(sheet, i)">
-          {{ value }}
+      <tr *ngFor="let row of getDataRows(sheet)">
+        <td *ngFor="let columnName of getColumnNames(sheet)">
+          {{ row[columnName] }}
         </td>
       </tr>
     </tbody>
@@ -104,12 +104,12 @@
 <ng-template #verticalTable let-sheet>
   <table class="table table-vertical">
     <tbody>
-      <tr *ngFor="let columnName of getColumnNames(sheet); let i = index">
+      <tr *ngFor="let columnName of getColumnNames(sheet)">
         <th>
           {{ columnName | titlecase }}
         </th>
         <td>
-          {{ sheet.values[1][i] }}
+          {{ sheet.values[0][columnName] }}
         </td>
       </tr>
     </tbody>

@@ -26,8 +26,13 @@ export interface Sheet {
   values: string[][];
 }
 
-export interface ParsedSheet extends Sheet {
+export interface RowData {
+  [key: string]: string;
+}
+
+export interface ParsedSheet {
   metadata: Metadata;
+  values: RowData[];
 }
 
 @Injectable({
@@ -77,16 +82,18 @@ export class SheetsService {
       map((resp: Sheets) => {
         return resp.valueRanges.map((sheet) => {
           const metadata = parseMetadata(sheet);
-          const columnIndices = metadata.columns
-            .concat(metadata.largeTextColumns)
-            .map((header) => sheet.values[0].indexOf(header));
+          const columns = sheet.values[0];
+          const values = sheet.values.slice(1);
           return {
             metadata,
-            majorDimension: sheet.majorDimension,
-            range: sheet.range,
-            values: sheet.values.map((row) => {
-              return row.filter((_, index) => columnIndices.includes(index));
-            }),
+            values: values.map(row => {
+              return row.reduce((rowObj, currCell, index) => {
+                return {
+                  ...rowObj,
+                  [columns[index]]: currCell
+                };
+              }, {});
+            })
           } as ParsedSheet;
         });
       })
