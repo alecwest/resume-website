@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { SheetsService, SheetsServiceResponse, Sheet } from './sheets.service';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { SheetsService, Sheets, Sheet, ParsedSheet } from './sheets.service';
 
 @Component({
   selector: 'app-root',
@@ -9,29 +9,34 @@ import { SheetsService, SheetsServiceResponse, Sheet } from './sheets.service';
 export class AppComponent implements OnInit {
   title = 'website';
 
-  sheetsData: SheetsServiceResponse;
+  sheetsData: ParsedSheet[];
+
+  @ViewChild('dataGrid') dataGridTemplate: TemplateRef<any>;
+  @ViewChild('iconGrid') iconGridTemplate: TemplateRef<any>;
+  @ViewChild('table') tableTemplate: TemplateRef<any>;
+  @ViewChild('verticalTable') verticalTableTemplate: TemplateRef<any>;
 
   constructor(private sheetsService: SheetsService) {}
 
   ngOnInit() {
     this.sheetsService
       .getSheets(
-        { sheetName: 'AboutMe', start: 'A', end: 'B' },
-        { sheetName: 'Education', start: 'A', end: 'G' },
-        { sheetName: 'WorkHistory', start: 'A', end: 'G' },
-        { sheetName: 'Skills', start: 'A', end: 'B' },
-        { sheetName: 'Projects', start: 'A', end: 'E' }
+        '1G5HQaVM-T6NYPFtO-MuflVcZB2EbqmCHnkQwh33egYY',
+        { sheetName: 'AboutMe', start: 'A', end: 'Z' },
+        { sheetName: 'Education', start: 'A', end: 'Z' },
+        { sheetName: 'WorkHistory', start: 'A', end: 'Z' },
+        { sheetName: 'Skills', start: 'A', end: 'Z' },
+        { sheetName: 'Languages', start: 'A', end: 'Z' },
+        { sheetName: 'Projects', start: 'A', end: 'Z' },
+        { sheetName: 'Websites', start: 'A', end: 'Z' }
       )
       .subscribe((resp) => {
-        console.log(resp);
         this.sheetsData = resp;
       });
   }
 
-  getColumnNames(sheet: Sheet): string[] {
-    return sheet.values[0].filter((column, index) => {
-      return !this.isLargeText(column) && !this.columnIsEmpty(sheet, index);
-    });
+  getColumnNames(sheet: ParsedSheet): string[] {
+    return sheet.metadata.columns;
   }
 
   columnIsEmpty(sheet: Sheet, columnIndex: number): boolean {
@@ -40,11 +45,21 @@ export class AppComponent implements OnInit {
     });
   }
 
-  getDataRows(sheet: Sheet): string[][] {
+  getDataLayout(sheet: ParsedSheet): TemplateRef<any> {
+    switch (sheet.metadata.layout) {
+      case 'dataGrid': return this.dataGridTemplate;
+      case 'iconGrid': return this.iconGridTemplate;
+      case 'table': return this.tableTemplate;
+      case 'verticalTable': return this.verticalTableTemplate;
+      default: return this.tableTemplate;
+    }
+  }
+
+  getDataRows(sheet: ParsedSheet): string[][] {
     return sheet.values.slice(1);
   }
 
-  getRowCells(sheet: Sheet, rowIndex: number): string[] {
+  getRowCells(sheet: ParsedSheet, rowIndex: number): string[] {
     const columns = sheet.values[0];
     return this.getDataRows(sheet)[rowIndex].filter((_, index) => {
       return !this.isLargeText(columns[index]);
@@ -55,27 +70,15 @@ export class AppComponent implements OnInit {
     return sheet.range.split('!')[0].replace(/([a-z])([A-Z])/, '$1 $2');
   }
 
-  isDataGridSheet(sheet: Sheet): boolean {
-    return this.someCell(sheet, (cell) => this.isLargeText(cell));
-  }
-
-  isVerticalTableSheet(sheet: Sheet) {
-    return sheet.values[0].some((element) => element.includes('#'));
-  }
-
   isLargeText(element: string) {
-    return element.includes('>');
+    return element.length > 60;
   }
 
-  getDetailCells(sheet: Sheet, rowIndex: number): string[] {
+  getDetailCells(sheet: ParsedSheet, rowIndex: number): string[] {
     const columns = sheet.values[0];
     return this.getDataRows(sheet)[rowIndex].filter((_, index) => {
       return this.isLargeText(columns[index]);
     });
-  }
-
-  isIconSheet(sheet: Sheet): boolean {
-    return this.someCell(sheet, (cell) => this.getIconClass(cell) != null);
   }
 
   getIconClass(element: string) {
@@ -83,9 +86,5 @@ export class AppComponent implements OnInit {
       technical: 'code',
       personal: 'user',
     }[element];
-  }
-
-  private someCell(sheet, callback: (cell: string) => boolean): boolean {
-    return sheet.values.some((row) => row.some(callback));
   }
 }
