@@ -72,10 +72,13 @@
 
 <ng-template #iconGrid let-sheet>
   <div class="clr-row">
-    <ng-container *ngFor="let row of getDataRows(sheet); let i = index">
-      <div class="clr-col">
-        <h4>{{ row[0] | titlecase }}</h4>
-        <clr-icon attr.shape="{{ getIconClass(row[1]) }}"></clr-icon>
+    <ng-container *ngFor="let row of getDataRows(sheet); let i = index;">
+      <div class="clr-col icon-grid-content">
+        <h4>{{ row[getColumnNames(sheet)[0]] | titlecase }}</h4>
+        <img
+          class="icon-grid-image"
+          [src]="row[getColumnNames(sheet)[1]]"
+          [alt]="row[getColumnNames(sheet)[2]]" />
       </div>
       <div class="clr-break-row" *ngIf="i % 3 === 2"></div>
     </ng-container>
