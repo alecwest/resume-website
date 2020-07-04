@@ -2,12 +2,15 @@
   <div class="branding">
     <a href="..." class="nav-link">
       <clr-icon shape="flame"></clr-icon>
-      <span class="title">This could be my name</span>
+      <span class="title">{{ getAboutSheet().values[0].name }}</span>
     </a>
   </div>
   <div class="header-actions">
-    <a href="..." class="nav-link nav-text">
-      This could be my email, but I don't wanna hardcode anything
+    <a href="mailto:{{ getAboutSheet().values[0].email }}" class="nav-link nav-text">
+      {{ getAboutSheet().values[0].email }}
+    </a>
+    <a href="tel:{{ getAboutSheet().values[0].phone }}" class="nav-link nav-text">
+      {{ getAboutSheet().values[0].phone }}
     </a>
   </div>
 </header>

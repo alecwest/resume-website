@@ -32,6 +32,7 @@ export interface RowData {
 
 export interface ParsedSheet {
   metadata: Metadata;
+  sheetName: string;
   values: RowData[];
 }
 
@@ -86,6 +87,7 @@ export class SheetsService {
           const values = sheet.values.slice(1);
           return {
             metadata,
+            sheetName: sheet.range.split('!')[0],
             values: values.map(row => {
               return row.reduce((rowObj, currCell, index) => {
                 return {
