@@ -1,123 +1,126 @@
-<header class="header header-3">
-  <div class="branding">
-    <a href="..." class="nav-link">
-      <clr-icon shape="flame"></clr-icon>
-      <span class="title">{{ getAboutSheet().values[0].name }}</span>
-    </a>
-  </div>
-  <div class="header-actions">
-    <a href="mailto:{{ getAboutSheet().values[0].email }}" class="nav-link nav-text">
-      {{ getAboutSheet().values[0].email }}
-    </a>
-    <a href="tel:{{ getAboutSheet().values[0].phone }}" class="nav-link nav-text">
-      {{ getAboutSheet().values[0].phone }}
-    </a>
-  </div>
-</header>
+<clr-main-container>
+  <clr-header class="header header-3">
+    <div class="branding">
+      <a href="/" class="nav-link">
+        <clr-icon shape="flame"></clr-icon>
+        <span class="title">{{ getAboutSheet().values[0].name }}</span>
+      </a>
+    </div>
+    <div class="header-actions">
+      <a href="mailto:{{ getAboutSheet().values[0].email }}" class="nav-link nav-text">
+        {{ getAboutSheet().values[0].email }}
+      </a>
+      <a href="tel:{{ getAboutSheet().values[0].phone }}" class="nav-link nav-text">
+        {{ getAboutSheet().values[0].phone }}
+      </a>
+    </div>
+  </clr-header>
 
-<nav class="subnav">
-  <ul class="nav">
-    <li class="nav-item" *ngFor="let sheet of sheetsData">
-      <a class="nav-link" href="#">{{ sheet.metadata.header }}</a>
-    </li>
-  </ul>
-</nav>
+  <nav class="subnav" [clr-nav-level]="1">
+    <ul class="nav">
+      <li class="nav-item" *ngFor="let sheet of getTableSheets()">
+        <a class="nav-link" href="#{{sheet.metadata.header}}">{{ sheet.metadata.header }}</a>
+      </li>
+    </ul>
+  </nav>
 
-<!-- Card Style Data -->
-<div class="clr-row" *ngFor="let sheet of sheetsData">
-  <div class="clr-col-lg-6 clr-offset-lg-3 clr-col-12">
-    <div class="card">
-      <div class="card-header">
-        {{ sheet.metadata.header }}
-      </div>
-      <div class="card-block">
-        <div class="card-text">
-          <ng-container
-            *ngTemplateOutlet="
-              getDataLayout(sheet);
-              context: { $implicit: sheet }
-            "
-          ></ng-container>
+
+  <!-- Card Style Data -->
+  <div class="clr-row" *ngFor="let sheet of getTableSheets()">
+    <div class="clr-col-lg-8 clr-offset-lg-2 clr-col-12">
+      <div class="card" [id]="sheet.metadata.header">
+        <div class="card-header">
+          {{ sheet.metadata.header }}
+        </div>
+        <div class="card-block">
+          <div class="card-text">
+            <ng-container
+              *ngTemplateOutlet="
+                getDataLayout(sheet);
+                context: { $implicit: sheet }
+              "
+            ></ng-container>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<ng-template #dataGrid let-sheet>
-  <clr-datagrid>
-    <ng-container *ngFor="let columnName of getColumnNames(sheet)">
-      <clr-dg-column [clrDgField]="columnName">
-        {{ columnName | titlecase }}
-      </clr-dg-column>
-    </ng-container>
-
-    <clr-dg-row
-      *clrDgItems="let row of getDataRows(sheet)"
-      [clrDgItem]="row"
-    >
-      <clr-dg-cell *ngFor="let columnName of getColumnNames(sheet)">
-        {{ row[columnName] }}
-      </clr-dg-cell>
-
-      <clr-dg-row-detail *clrIfExpanded>
-        <ul class="list-unstyled">
-          <ng-container *ngFor="let detailColumn of getLargeColumnNames(sheet)">
-            <li *ngFor="let line of row[detailColumn].split('\n')">
-              {{ line }}
-            </li>
-          </ng-container>
-        </ul>
-      </clr-dg-row-detail>
-    </clr-dg-row>
-  </clr-datagrid>
-</ng-template>
-
-<ng-template #iconGrid let-sheet>
-  <div class="clr-row">
-    <ng-container *ngFor="let row of getDataRows(sheet); let i = index;">
-      <div class="clr-col icon-grid-content">
-        <h4>{{ row[getColumnNames(sheet)[0]] | titlecase }}</h4>
-        <img
-          class="icon-grid-image"
-          [src]="row[getColumnNames(sheet)[1]]"
-          [alt]="row[getColumnNames(sheet)[2]]" />
-      </div>
-      <div class="clr-break-row" *ngIf="i % 3 === 2"></div>
-    </ng-container>
-  </div>
-</ng-template>
-
-<ng-template #table let-sheet>
-  <table class="table">
-    <thead>
-      <tr>
-        <th *ngFor="let columnName of getColumnNames(sheet)">
+  <ng-template #dataGrid let-sheet>
+    <clr-datagrid>
+      <ng-container *ngFor="let columnName of getColumnNames(sheet)">
+        <clr-dg-column [clrDgField]="columnName">
           {{ columnName | titlecase }}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let row of getDataRows(sheet)">
-        <td *ngFor="let columnName of getColumnNames(sheet)">
+        </clr-dg-column>
+      </ng-container>
+
+      <clr-dg-row
+        *clrDgItems="let row of getDataRows(sheet)"
+        [clrDgItem]="row"
+      >
+        <clr-dg-cell *ngFor="let columnName of getColumnNames(sheet)">
           {{ row[columnName] }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</ng-template>
+        </clr-dg-cell>
 
-<ng-template #verticalTable let-sheet>
-  <table class="table table-vertical">
-    <tbody>
-      <tr *ngFor="let columnName of getColumnNames(sheet)">
-        <th>
-          {{ columnName | titlecase }}
-        </th>
-        <td>
-          {{ sheet.values[0][columnName] }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</ng-template>
+        <clr-dg-row-detail *clrIfExpanded>
+          <ul class="list-unstyled">
+            <ng-container *ngFor="let detailColumn of getLargeColumnNames(sheet)">
+              <li *ngFor="let line of row[detailColumn].split('\n')">
+                {{ line }}
+              </li>
+            </ng-container>
+          </ul>
+        </clr-dg-row-detail>
+      </clr-dg-row>
+    </clr-datagrid>
+  </ng-template>
+
+  <ng-template #iconGrid let-sheet>
+    <div class="clr-row">
+      <ng-container *ngFor="let row of getDataRows(sheet); let i = index;">
+        <div class="clr-col icon-grid-content">
+          <h4>{{ row[getColumnNames(sheet)[0]] | titlecase }}</h4>
+          <img
+            class="icon-grid-image"
+            [src]="row[getColumnNames(sheet)[1]]"
+            [alt]="row[getColumnNames(sheet)[2]]" />
+        </div>
+        <div class="clr-break-row" *ngIf="i % 3 === 2"></div>
+      </ng-container>
+    </div>
+  </ng-template>
+
+  <ng-template #table let-sheet>
+    <table class="table">
+      <thead>
+        <tr>
+          <th *ngFor="let columnName of getColumnNames(sheet)">
+            {{ columnName | titlecase }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of getDataRows(sheet)">
+          <td *ngFor="let columnName of getColumnNames(sheet)">
+            {{ row[columnName] }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-template>
+
+  <ng-template #verticalTable let-sheet>
+    <table class="table table-vertical">
+      <tbody>
+        <tr *ngFor="let columnName of getColumnNames(sheet)">
+          <th>
+            {{ columnName | titlecase }}
+          </th>
+          <td>
+            {{ sheet.values[0][columnName] }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-template>
+</clr-main-container>

@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { SheetsService, ParsedSheet } from './sheets.service';
+import { SheetsService, ParsedSheet, RowData } from './sheets.service';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +38,10 @@ export class AppComponent implements OnInit {
 
   getAboutSheet(): ParsedSheet {
     return this.sheetsData.find(sheet => sheet.sheetName.includes('About'));
+  }
+
+  getTableSheets(): ParsedSheet[] {
+    return this.sheetsData.filter(sheet => !sheet.sheetName.includes('About'));
   }
 
   getColumnNames(sheet: ParsedSheet): string[] {
