@@ -24,22 +24,25 @@
     </ul>
   </nav>
 
-
-  <!-- Card Style Data -->
-  <div class="clr-row" *ngFor="let sheet of getTableSheets()">
-    <div class="clr-col-lg-8 clr-offset-lg-2 clr-col-12">
-      <div class="card" [id]="sheet.metadata.header">
-        <div class="card-header">
-          {{ sheet.metadata.header }}
-        </div>
-        <div class="card-block">
-          <div class="card-text">
-            <ng-container
-              *ngTemplateOutlet="
+  <div class="content-container">
+    <div class="content-area">
+      <!-- Card Style Data -->
+      <div class="clr-row" *ngFor="let sheet of getTableSheets()">
+        <div class="clr-col-lg-8 clr-offset-lg-2 clr-col-12">
+          <div class="card" [id]="sheet.metadata.header">
+            <div class="card-header">
+              {{ sheet.metadata.header }}
+            </div>
+            <div class="card-block">
+              <div class="card-text">
+                <ng-container
+                *ngTemplateOutlet="
                 getDataLayout(sheet);
                 context: { $implicit: sheet }
-              "
-            ></ng-container>
+                "
+                ></ng-container>
+              </div>
+            </div>
           </div>
         </div>
       </div>
