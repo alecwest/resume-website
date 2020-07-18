@@ -1,5 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { SheetsService, ParsedSheet, RowData } from './sheets.service';
+import { Email } from './models';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,14 @@ export class AppComponent implements OnInit {
   title = 'website';
 
   sheetsData: ParsedSheet[];
+
+  aboutSheet: ParsedSheet;
+
+  name: string;
+
+  email: Email;
+
+  phone: string;
 
   @ViewChild('dataGrid') dataGridTemplate: TemplateRef<any>;
   @ViewChild('iconGrid') iconGridTemplate: TemplateRef<any>;
@@ -33,15 +42,38 @@ export class AppComponent implements OnInit {
       .subscribe((resp) => {
         console.log(resp);
         this.sheetsData = resp;
+        this.aboutSheet = this.sheetsData.find((sheet) =>
+          sheet.sheetName.includes('About')
+        );
+        this.name = this.getName();
+        this.email = this.getEmail();
+        this.phone = this.getPhone();
       });
   }
 
-  getAboutSheet(): ParsedSheet {
-    return this.sheetsData.find(sheet => sheet.sheetName.includes('About'));
+  private getName(): string {
+    return this.aboutSheet.values[0].name;
+  }
+
+  private getEmail(): Email {
+    const email: string = this.aboutSheet.values[0].email;
+    const parsed = email.split(/[@.]/);
+    return {
+      name: parsed[0],
+      domain: parsed[1],
+      tld: parsed[2],
+    } as Email;
+  }
+
+  private getPhone(): string {
+    const phone: string = this.aboutSheet.values[0].phone;
+    return phone;
   }
 
   getTableSheets(): ParsedSheet[] {
-    return this.sheetsData.filter(sheet => !sheet.sheetName.includes('About'));
+    return this.sheetsData.filter(
+      (sheet) => !sheet.sheetName.includes('About')
+    );
   }
 
   getColumnNames(sheet: ParsedSheet): string[] {

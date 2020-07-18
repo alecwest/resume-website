@@ -3,5 +3,9 @@
 }
 
 .icon-grid-image {
-  width: 4em;
+  width: 3rem;
+}
+
+.cryptedmail:after {
+  content: attr(data-name) "@" attr(data-domain) "." attr(data-tld);
 }

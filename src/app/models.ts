@@ -3,3 +3,9 @@ export interface SheetRange {
   start: string;
   end: string;
 }
+
+export interface Email {
+  name: string;
+  domain: string;
+  tld: string;
+}
