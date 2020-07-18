@@ -43,7 +43,6 @@ export class AppComponent implements OnInit {
         { sheetName: 'Websites', start: 'A', end: 'Z' }
       )
       .subscribe((resp) => {
-        console.log(resp);
         this.sheetsData = resp;
         this.aboutSheet = this.sheetsData.find((sheet) =>
           sheet.sheetName.includes('About')

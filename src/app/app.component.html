@@ -77,7 +77,7 @@
     <clr-datagrid>
       <ng-container *ngFor="let columnName of getColumnNames(sheet)">
         <clr-dg-column [clrDgField]="columnName">
-          {{ columnName | titlecase }}
+          {{ columnName | viewFriendly | titlecase }}
         </clr-dg-column>
       </ng-container>
 
@@ -122,7 +122,7 @@
       <thead>
         <tr>
           <th *ngFor="let columnName of getColumnNames(sheet)">
-            {{ columnName | titlecase }}
+            {{ columnName | viewFriendly | titlecase }}
           </th>
         </tr>
       </thead>
@@ -141,7 +141,7 @@
       <tbody>
         <tr *ngFor="let columnName of getColumnNames(sheet)">
           <th>
-            {{ columnName | titlecase }}
+            {{ columnName | viewFriendly | titlecase }}
           </th>
           <td>
             {{ sheet.values[0][columnName] }}
