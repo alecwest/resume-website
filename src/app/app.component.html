@@ -3,53 +3,71 @@
     <div class="branding">
       <a href="/" class="nav-link">
         <clr-icon shape="flame"></clr-icon>
-        <span class="title">{{ name }}</span>
+        <clr-spinner clrInline *ngIf="loading; else nameHeader"></clr-spinner>
+        <ng-template #nameHeader>
+          <span class="title">{{ name }}</span>
+        </ng-template>
       </a>
     </div>
-    <div class="header-actions">
-      <a
-        href="#"
-        class="nav-link nav-text cryptedmail"
-        [attr.data-name]="email.name"
-        [attr.data-domain]="email.domain"
-        [attr.data-tld]="email.tld"
-        onclick="window.location.href = 'mailto:' + this.dataset.name + '@' + this.dataset.domain + '.' + this.dataset.tld; return false;"></a>
-      <a href="tel:{{ phone }}" class="nav-link nav-text">
-        {{ phone }}
-      </a>
+    <div class="header-actions" *ngIf="!loading">
+      <ng-template #contact>
+        <a
+          href="#"
+          class="nav-link nav-text cryptedmail"
+          [attr.data-name]="email?.name"
+          [attr.data-domain]="email?.domain"
+          [attr.data-tld]="email?.tld"
+          onclick="window.location.href = 'mailto:' + this.dataset.name + '@' + this.dataset.domain + '.' + this.dataset.tld; return false;"
+        ></a>
+        <a href="tel:{{ phone }}" class="nav-link nav-text">
+          {{ phone }}
+        </a>
+      </ng-template>
     </div>
   </clr-header>
 
   <nav class="subnav" [clr-nav-level]="1">
     <ul class="nav">
-      <li class="nav-item" *ngFor="let sheet of getTableSheets()">
-        <a class="nav-link" href="#{{sheet.metadata.header}}">{{ sheet.metadata.header }}</a>
+      <li class="nav-item" *ngIf="loading; else navLinks">
+        <clr-spinner clrInline>Loading...</clr-spinner>
       </li>
+      <ng-template #navLinks>
+        <li class="nav-item" *ngFor="let sheet of getTableSheets()">
+          <a class="nav-link" href="#{{ sheet.metadata.header }}">{{
+            sheet.metadata.header
+          }}</a>
+        </li>
+      </ng-template>
     </ul>
   </nav>
 
   <div class="content-container">
     <div class="content-area">
-      <!-- Card Style Data -->
-      <div class="clr-row" *ngFor="let sheet of getTableSheets()">
-        <div class="clr-col-lg-8 clr-offset-lg-2 clr-col-12">
-          <div class="card" [id]="sheet.metadata.header">
-            <div class="card-header">
-              {{ sheet.metadata.header }}
-            </div>
-            <div class="card-block">
-              <div class="card-text">
-                <ng-container
-                *ngTemplateOutlet="
-                getDataLayout(sheet);
-                context: { $implicit: sheet }
-                "
-                ></ng-container>
+      <div class="clr-row loading" *ngIf="loading; else dataCards">
+        <clr-spinner></clr-spinner>
+      </div>
+      <ng-template #dataCards>
+        <!-- Card Style Data -->
+        <div class="clr-row" *ngFor="let sheet of getTableSheets()">
+          <div class="clr-col-lg-8 clr-offset-lg-2 clr-col-12">
+            <div class="card" [id]="sheet.metadata.header">
+              <div class="card-header">
+                {{ sheet.metadata.header }}
+              </div>
+              <div class="card-block">
+                <div class="card-text">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      getDataLayout(sheet);
+                      context: { $implicit: sheet }
+                    "
+                  ></ng-container>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </ng-template>
     </div>
   </div>
 
@@ -61,17 +79,16 @@
         </clr-dg-column>
       </ng-container>
 
-      <clr-dg-row
-        *clrDgItems="let row of getDataRows(sheet)"
-        [clrDgItem]="row"
-      >
+      <clr-dg-row *clrDgItems="let row of getDataRows(sheet)" [clrDgItem]="row">
         <clr-dg-cell *ngFor="let columnName of getColumnNames(sheet)">
           {{ row[columnName] }}
         </clr-dg-cell>
 
         <clr-dg-row-detail *clrIfExpanded>
           <ul class="list-unstyled">
-            <ng-container *ngFor="let detailColumn of getLargeColumnNames(sheet)">
+            <ng-container
+              *ngFor="let detailColumn of getLargeColumnNames(sheet)"
+            >
               <li *ngFor="let line of row[detailColumn].split('\n')">
                 {{ line }}
               </li>
@@ -84,13 +101,14 @@
 
   <ng-template #iconGrid let-sheet>
     <div class="clr-row">
-      <ng-container *ngFor="let row of getDataRows(sheet); let i = index;">
+      <ng-container *ngFor="let row of getDataRows(sheet); let i = index">
         <div class="clr-col icon-grid-content">
           <h4>{{ row[getColumnNames(sheet)[0]] | titlecase }}</h4>
           <img
             class="icon-grid-image"
             [src]="row[getColumnNames(sheet)[1]]"
-            [alt]="row[getColumnNames(sheet)[2]]" />
+            [alt]="row[getColumnNames(sheet)[2]]"
+          />
         </div>
         <div class="clr-break-row" *ngIf="i % 3 === 2"></div>
       </ng-container>

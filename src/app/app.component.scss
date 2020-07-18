@@ -9,3 +9,8 @@
 .cryptedmail:after {
   content: attr(data-name) "@" attr(data-domain) "." attr(data-tld);
 }
+
+.loading {
+  display: flex;
+  justify-content: center;
+}

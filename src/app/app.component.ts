@@ -25,9 +25,12 @@ export class AppComponent implements OnInit {
   @ViewChild('table') tableTemplate: TemplateRef<any>;
   @ViewChild('verticalTable') verticalTableTemplate: TemplateRef<any>;
 
+  loading = false;
+
   constructor(private sheetsService: SheetsService) {}
 
   ngOnInit() {
+    this.loading = true;
     this.sheetsService
       .getSheets(
         '1G5HQaVM-T6NYPFtO-MuflVcZB2EbqmCHnkQwh33egYY',
@@ -48,6 +51,7 @@ export class AppComponent implements OnInit {
         this.name = this.getName();
         this.email = this.getEmail();
         this.phone = this.getPhone();
+        this.loading = false;
       });
   }
 
