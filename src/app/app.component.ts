@@ -20,6 +20,8 @@ export class AppComponent implements OnInit {
 
   phone: string;
 
+  resume: string;
+
   @ViewChild('dataGrid') dataGridTemplate: TemplateRef<any>;
   @ViewChild('iconGrid') iconGridTemplate: TemplateRef<any>;
   @ViewChild('table') tableTemplate: TemplateRef<any>;
@@ -50,6 +52,7 @@ export class AppComponent implements OnInit {
         this.name = this.getName();
         this.email = this.getEmail();
         this.phone = this.getPhone();
+        this.resume = this.getResume();
         this.loading = false;
       });
   }
@@ -71,6 +74,11 @@ export class AppComponent implements OnInit {
   private getPhone(): string {
     const phone: string = this.aboutSheet.values[0].phone;
     return phone;
+  }
+
+  private getResume(): string {
+    const resume: string = this.aboutSheet.values[0].resume;
+    return resume;
   }
 
   getTableSheets(): ParsedSheet[] {
