@@ -22,6 +22,7 @@ export class AppComponent implements OnInit {
 
   resume: string;
 
+  @ViewChild('headerCard') headerCardTemplate: TemplateRef<any>;
   @ViewChild('dataGrid') dataGridTemplate: TemplateRef<any>;
   @ViewChild('iconGrid') iconGridTemplate: TemplateRef<any>;
   @ViewChild('table') tableTemplate: TemplateRef<any>;
@@ -57,12 +58,16 @@ export class AppComponent implements OnInit {
       });
   }
 
+  private get aboutRow(): any {
+    return this.aboutSheet.values[0]
+  }
+
   private getName(): string {
-    return this.aboutSheet.values[0].name;
+    return this.aboutRow.name;
   }
 
   private getEmail(): Email {
-    const email: string = this.aboutSheet.values[0].email;
+    const email: string = this.aboutRow.email;
     const parsed = email.split(/[@.]/);
     return {
       name: parsed[0],
@@ -72,19 +77,25 @@ export class AppComponent implements OnInit {
   }
 
   private getPhone(): string {
-    const phone: string = this.aboutSheet.values[0].phone;
+    const phone: string = this.aboutRow.phone;
     return phone;
   }
 
   private getResume(): string {
-    const resume: string = this.aboutSheet.values[0].resume;
+    const resume: string = this.aboutRow.resume;
     return resume;
   }
 
+  get headshot(): string {
+    return this.aboutRow.headshot;
+  }
+
+  get intro(): string {
+    return this.aboutRow.intro;
+  }
+
   getTableSheets(): ParsedSheet[] {
-    return this.sheetsData.filter(
-      (sheet) => !sheet.sheetName.includes('About')
-    );
+    return this.sheetsData;
   }
 
   getColumnNames(sheet: ParsedSheet): string[] {
@@ -97,6 +108,8 @@ export class AppComponent implements OnInit {
 
   getDataLayout(sheet: ParsedSheet): TemplateRef<any> {
     switch (sheet.metadata.layout) {
+      case 'headerCard':
+        return this.headerCardTemplate;
       case 'dataGrid':
         return this.dataGridTemplate;
       case 'iconGrid':

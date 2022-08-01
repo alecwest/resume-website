@@ -94,6 +94,20 @@
     </div>
   </div>
 
+  <ng-template #headerCard let-sheet>
+    <div class="clr-row">
+      <div class="clr-col-4 headshot">
+        <img
+          class="headshot-image"
+          [src]="headshot"
+          />
+      </div>
+      <div class="clr-col-8 bio">
+        <p>{{ intro }}</p>
+      </div>
+    </div>
+  </ng-template>
+
   <ng-template #dataGrid let-sheet>
     <clr-datagrid>
       <ng-container *ngFor="let columnName of getColumnNames(sheet)">
