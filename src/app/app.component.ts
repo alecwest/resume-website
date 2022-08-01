@@ -133,4 +133,8 @@ export class AppComponent implements OnInit {
       personal: 'user',
     }[element];
   }
+
+  isUrl(element: string): boolean {
+    return element.includes('.com');
+  }
 }
