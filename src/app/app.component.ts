@@ -54,6 +54,7 @@ export class AppComponent implements OnInit {
         this.email = this.getEmail();
         this.phone = this.getPhone();
         this.resume = this.getResume();
+        document.querySelector('#favIcon').setAttribute('href', this.headshot);
         this.loading = false;
       });
   }
