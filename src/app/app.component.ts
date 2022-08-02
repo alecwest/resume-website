@@ -38,11 +38,11 @@ export class AppComponent implements OnInit {
       .getSheets(
         '1G5HQaVM-T6NYPFtO-MuflVcZB2EbqmCHnkQwh33egYY',
         { sheetName: 'AboutMe', start: 'A', end: 'Z' },
-        { sheetName: 'Education', start: 'A', end: 'Z' },
         { sheetName: 'WorkHistory', start: 'A', end: 'Z' },
+        { sheetName: 'Education', start: 'A', end: 'Z' },
+        { sheetName: 'Projects', start: 'A', end: 'Z' },
         { sheetName: 'Skills', start: 'A', end: 'Z' },
         { sheetName: 'Languages', start: 'A', end: 'Z' },
-        { sheetName: 'Projects', start: 'A', end: 'Z' },
         { sheetName: 'Websites', start: 'A', end: 'Z' }
       )
       .subscribe((resp) => {
