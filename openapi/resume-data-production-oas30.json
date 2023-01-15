@@ -1,0 +1,50 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "resume-data",
+    "description" : "API for managing my resume data",
+    "version" : "2023-01-15T17:21:01Z"
+  },
+  "servers" : [ {
+    "url" : "https://9apc2wzyzb.execute-api.us-east-2.amazonaws.com/{basePath}",
+    "variables" : {
+      "basePath" : {
+        "default" : "/production"
+      }
+    }
+  } ],
+  "paths" : {
+    "/resume/{user}" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "user",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Empty" : {
+        "title" : "Empty Schema",
+        "type" : "object"
+      }
+    }
+  }
+}

@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ClarityModule } from '@clr/angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ViewFriendlyPipe } from './view-friendly.pipe';
+import { ApiModule } from './api/v1';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ViewFriendlyPipe } from './view-friendly.pipe';
     AppRoutingModule,
     HttpClientModule,
     ClarityModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ApiModule
   ],
   providers: [],
   bootstrap: [AppComponent]
