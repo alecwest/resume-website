@@ -1,6 +1,10 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { SheetsService, ParsedSheet, RowData } from './sheets.service';
-import { Email } from './models';
+import { Email, ResumeEntriesByType } from './models';
+import { ResumeDataService } from './resume-data.service';
+import { ResumeEntry } from './api/v1';
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -14,13 +18,29 @@ export class AppComponent implements OnInit {
 
   aboutSheet: ParsedSheet;
 
-  name: string;
-
   email: Email;
 
   phone: string;
 
   resume: string;
+
+  entriesByType$: Observable<ResumeEntriesByType> = this.resumeDataService.getEntriesByUser("alecwest").pipe(
+    map(resp => ResumeEntriesByType.fromResumeEntries(resp.Items))
+  );
+
+  bio: Observable<ResumeEntry> = this.entriesByType$.pipe(
+    filter(entries => entries.bio.length > 0),
+    map(entries => entries.bio[0])
+  )
+
+  name: Observable<string> = this.bio.pipe(map(bioEntry => bioEntry.title));
+
+  intro: Observable<string[]> = this.bio.pipe(map(bioEntry => bioEntry.details.description));
+
+  headshot: Observable<string> = this.bio.pipe(
+    filter(entry => entry.details.images.length > 0),
+    map(bioEntry => bioEntry.details.images[0])
+  );
 
   @ViewChild('headerCard') headerCardTemplate: TemplateRef<any>;
   @ViewChild('dataGrid') dataGridTemplate: TemplateRef<any>;
@@ -30,10 +50,11 @@ export class AppComponent implements OnInit {
 
   loading = false;
 
-  constructor(private sheetsService: SheetsService) {}
+  constructor(private sheetsService: SheetsService, private resumeDataService: ResumeDataService) {}
 
   ngOnInit() {
     this.loading = true;
+    this.headshot.subscribe(url => document.querySelector('#favIcon').setAttribute('href', url));
     this.sheetsService
       .getSheets(
         '1G5HQaVM-T6NYPFtO-MuflVcZB2EbqmCHnkQwh33egYY',
@@ -50,49 +71,14 @@ export class AppComponent implements OnInit {
         this.aboutSheet = this.sheetsData.find((sheet) =>
           sheet.sheetName.includes('About')
         );
-        this.name = this.getName();
-        this.email = this.getEmail();
-        this.phone = this.getPhone();
         this.resume = this.getResume();
-        document.querySelector('#favIcon').setAttribute('href', this.headshot);
         this.loading = false;
       });
   }
 
-  private get aboutRow(): any {
-    return this.aboutSheet.values[0]
-  }
-
-  private getName(): string {
-    return this.aboutRow.name;
-  }
-
-  private getEmail(): Email {
-    const email: string = this.aboutRow.email;
-    const parsed = email.split(/[@.]/);
-    return {
-      name: parsed[0],
-      domain: parsed[1],
-      tld: parsed[2],
-    } as Email;
-  }
-
-  private getPhone(): string {
-    const phone: string = this.aboutRow.phone;
-    return phone;
-  }
-
   private getResume(): string {
-    const resume: string = this.aboutRow.resume;
+    const resume: string = this.aboutSheet.values[0].resume;
     return resume;
-  }
-
-  get headshot(): string {
-    return this.aboutRow.headshot;
-  }
-
-  get intro(): string {
-    return this.aboutRow.intro;
   }
 
   getTableSheets(): ParsedSheet[] {

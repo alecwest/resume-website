@@ -14,6 +14,12 @@ import { EntryDetails } from './entryDetails';
 
 export interface ResumeEntry { 
     /**
+     * The username the entry is tied to
+     */
+    user: string;
+    details: EntryDetails;
+    id: string;
+    /**
      * Approximate date the event first began
      */
     startDate: string;
@@ -21,12 +27,6 @@ export interface ResumeEntry {
      * Approximate date the event ended, or \'present\'
      */
     endDate: string;
-    /**
-     * The username the entry is tied to
-     */
-    user: string;
-    details: EntryDetails;
-    id: string;
     title: string;
     type: ResumeEntry.TypeEnum;
 }

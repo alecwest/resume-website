@@ -21,6 +21,10 @@ export interface EntryDetails {
      */
     degree?: string;
     /**
+     * Supplemental information about the entry. Each item represents a line break / paragraph.
+     */
+    description?: Array<string>;
+    /**
      * For education type: the notable-classes taken
      */
     notableClasses?: Array<string>;
@@ -28,10 +32,6 @@ export interface EntryDetails {
      * For employment type: the position in the job
      */
     position?: string;
-    /**
-     * For employment type: each line is a description of one role performed in the job
-     */
-    duties?: Array<string>;
     /**
      * For skillhard type: a ranking from 1-5 of experience with the skill
      */
@@ -46,5 +46,6 @@ export interface EntryDetails {
     social?: Array<Social>;
     introduction?: Array<string>;
     subtitle?: string;
+    images?: Array<string>;
 }
 

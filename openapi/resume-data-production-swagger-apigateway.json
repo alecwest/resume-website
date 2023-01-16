@@ -34,8 +34,8 @@
         },
         "x-amazon-apigateway-integration" : {
           "type" : "aws_proxy",
-          "uri" : "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:810191593673:function:resume-data-api-gateway-dynamodb/invocations",
           "httpMethod" : "POST",
+          "uri" : "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:810191593673:function:resume-data-api-gateway-dynamodb/invocations",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -112,14 +112,6 @@
             "type" : "object",
             "title" : "Resume Entry",
             "properties" : {
-              "startDate" : {
-                "type" : "string",
-                "description" : "Approximate date the event first began"
-              },
-              "endDate" : {
-                "type" : "string",
-                "description" : "Approximate date the event ended, or 'present'"
-              },
               "user" : {
                 "type" : "string",
                 "description" : "The username the entry is tied to"
@@ -133,6 +125,13 @@
                     "type" : "string",
                     "description" : "For education type: the degree received"
                   },
+                  "description" : {
+                    "type" : "array",
+                    "description" : "Supplemental information about the entry. Each item represents a line break / paragraph.",
+                    "items" : {
+                      "type" : "string"
+                    }
+                  },
                   "notableClasses" : {
                     "type" : "array",
                     "description" : "For education type: the notable-classes taken",
@@ -143,13 +142,6 @@
                   "position" : {
                     "type" : "string",
                     "description" : "For employment type: the position in the job"
-                  },
-                  "duties" : {
-                    "type" : "array",
-                    "description" : "For employment type: each line is a description of one role performed in the job",
-                    "items" : {
-                      "type" : "string"
-                    }
                   },
                   "proficiency" : {
                     "type" : "integer",
@@ -191,12 +183,27 @@
                   "subtitle" : {
                     "type" : "string",
                     "title" : "User subtitle/subheading"
+                  },
+                  "images" : {
+                    "type" : "array",
+                    "title" : "Image urls associated with the entry",
+                    "items" : {
+                      "type" : "string"
+                    }
                   }
                 }
               },
               "id" : {
                 "type" : "string",
                 "title" : "Entry ID"
+              },
+              "startDate" : {
+                "type" : "string",
+                "description" : "Approximate date the event first began"
+              },
+              "endDate" : {
+                "type" : "string",
+                "description" : "Approximate date the event ended, or 'present'"
               },
               "title" : {
                 "type" : "string",
@@ -234,6 +241,22 @@
         }
       },
       "title" : "Get Data Response"
+    }
+  },
+  "x-amazon-apigateway-gateway-responses" : {
+    "DEFAULT_5XX" : {
+      "responseParameters" : {
+        "gatewayresponse.header.Access-Control-Allow-Methods" : "'GET,OPTIONS'",
+        "gatewayresponse.header.Access-Control-Allow-Origin" : "'*'",
+        "gatewayresponse.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      }
+    },
+    "DEFAULT_4XX" : {
+      "responseParameters" : {
+        "gatewayresponse.header.Access-Control-Allow-Methods" : "'GET,OPTIONS'",
+        "gatewayresponse.header.Access-Control-Allow-Origin" : "'*'",
+        "gatewayresponse.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      }
     }
   }
 }

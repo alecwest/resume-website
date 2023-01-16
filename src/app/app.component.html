@@ -5,33 +5,11 @@
         <clr-icon shape="flame"></clr-icon>
         <clr-spinner clrInline *ngIf="loading; else nameHeader"></clr-spinner>
         <ng-template #nameHeader>
-          <span class="title">{{ name }}</span>
+          <span class="title">{{ name | async }}</span>
         </ng-template>
       </a>
     </div>
     <div class="header-actions" *ngIf="!loading">
-      <a
-        href="#"
-        class="nav-link nav-text tooltip tooltip-sm tooltip-bottom-left"
-        role="tooltip"
-        aria-haspopup="true"
-        [attr.data-name]="email?.name"
-        [attr.data-domain]="email?.domain"
-        [attr.data-tld]="email?.tld"
-        onclick="window.location.href = 'mailto:' + this.dataset.name + '@' + this.dataset.domain + '.' + this.dataset.tld; return false;"
-      >
-        <clr-icon shape="email"></clr-icon>
-        <span class="tooltip-content">Email me</span>
-      </a>
-      <a
-        href="tel:{{ phone }}"
-        class="nav-link nav-text tooltip tooltip-sm tooltip-bottom-left"
-        role="tooltip"
-        aria-haspopup="true"
-      >
-        <clr-icon shape="mobile"></clr-icon>
-        <span class="tooltip-content">Call me</span>
-      </a>
       <a
         [href]="resume"
         target="_blank"
@@ -99,11 +77,11 @@
       <div class="clr-col-4 headshot">
         <img
           class="headshot-image"
-          [src]="headshot"
+          [src]="headshot | async"
           />
       </div>
       <div class="clr-col-8 bio">
-        <p *ngFor="let line of intro.split('\n')">
+        <p *ngFor="let line of intro | async">
           <ng-container *ngTemplateOutlet="text; context: { $implicit: line }"></ng-container>
         </p>
       </div>

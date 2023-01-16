@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AwsService } from './aws.service';
+import { ResumeDataService } from './resume-data.service';
 
 describe('AwsService', () => {
-  let service: AwsService;
+  let service: ResumeDataService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(AwsService);
+    service = TestBed.inject(ResumeDataService);
   });
 
   it('should be created', () => {
