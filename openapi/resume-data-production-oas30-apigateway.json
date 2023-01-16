@@ -3,7 +3,7 @@
   "info" : {
     "title" : "resume-data",
     "description" : "API for managing my resume data",
-    "version" : "2023-01-16T03:25:53Z"
+    "version" : "2023-01-16T13:44:13Z"
   },
   "servers" : [ {
     "url" : "https://9apc2wzyzb.execute-api.us-east-2.amazonaws.com/{basePath}",
@@ -14,18 +14,9 @@
     }
   } ],
   "paths" : {
-    "/resume-data-api-gateway-dynamodb" : {
-      "x-amazon-apigateway-any-method" : {
-        "responses" : {
-          "200" : {
-            "description" : "200 response",
-            "content" : { }
-          }
-        }
-      }
-    },
     "/resume/{user}" : {
       "get" : {
+        "operationId" : "getEntriesByUser",
         "parameters" : [ {
           "name" : "user",
           "in" : "path",
@@ -45,6 +36,18 @@
               }
             }
           }
+        },
+        "x-amazon-apigateway-integration" : {
+          "uri" : "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:810191593673:function:resume-data-api-gateway-dynamodb/invocations",
+          "httpMethod" : "POST",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "contentHandling" : "CONVERT_TO_TEXT",
+          "type" : "aws_proxy"
         }
       }
     }
@@ -61,14 +64,14 @@
             "type" : "array",
             "items" : {
               "title" : "Resume Entry",
-              "required" : [ "details", "end-date", "id", "start-date", "title", "type", "user" ],
+              "required" : [ "details", "endDate", "id", "startDate", "title", "type", "user" ],
               "type" : "object",
               "properties" : {
-                "start-date" : {
+                "startDate" : {
                   "type" : "string",
                   "description" : "Approximate date the event first began"
                 },
-                "end-date" : {
+                "endDate" : {
                   "type" : "string",
                   "description" : "Approximate date the event ended, or 'present'"
                 },
@@ -84,16 +87,12 @@
                       "type" : "string",
                       "description" : "For education type: the degree received"
                     },
-                    "notable-classes" : {
+                    "notableClasses" : {
                       "type" : "array",
                       "description" : "For education type: the notable-classes taken",
                       "items" : {
                         "type" : "string"
                       }
-                    },
-                    "description" : {
-                      "type" : "object",
-                      "description" : "If description is an array, treat each entry as a single line."
                     },
                     "position" : {
                       "type" : "string",
@@ -107,12 +106,12 @@
                       }
                     },
                     "proficiency" : {
-                      "maximum" : 5,
-                      "minimum" : 1,
+                      "maximum" : 5.0,
+                      "minimum" : 1.0,
                       "type" : "integer",
                       "description" : "For skillhard type: a ranking from 1-5 of experience with the skill"
                     },
-                    "project-source" : {
+                    "projectSource" : {
                       "type" : "string",
                       "description" : "For project type: a url to a project"
                     },
