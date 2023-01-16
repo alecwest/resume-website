@@ -8,11 +8,13 @@ import { ClarityModule } from '@clr/angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ViewFriendlyPipe } from './view-friendly.pipe';
 import { ApiModule } from './api/v1';
+import { BioComponent } from './bio/bio.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ViewFriendlyPipe
+    ViewFriendlyPipe,
+    BioComponent
   ],
   imports: [
     BrowserModule,

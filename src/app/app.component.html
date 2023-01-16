@@ -73,19 +73,7 @@
   </div>
 
   <ng-template #headerCard let-sheet>
-    <div class="clr-row">
-      <div class="clr-col-4 headshot">
-        <img
-          class="headshot-image"
-          [src]="headshot | async"
-          />
-      </div>
-      <div class="clr-col-8 bio">
-        <p *ngFor="let line of intro | async">
-          <ng-container *ngTemplateOutlet="text; context: { $implicit: line }"></ng-container>
-        </p>
-      </div>
-    </div>
+    <app-bio [bio]="bio"></app-bio>
   </ng-template>
 
   <ng-template #dataGrid let-sheet>

@@ -31,16 +31,9 @@ export class AppComponent implements OnInit {
   bio: Observable<ResumeEntry> = this.entriesByType$.pipe(
     filter(entries => entries.bio.length > 0),
     map(entries => entries.bio[0])
-  )
+  );
 
   name: Observable<string> = this.bio.pipe(map(bioEntry => bioEntry.title));
-
-  intro: Observable<string[]> = this.bio.pipe(map(bioEntry => bioEntry.details.description));
-
-  headshot: Observable<string> = this.bio.pipe(
-    filter(entry => entry.details.images.length > 0),
-    map(bioEntry => bioEntry.details.images[0])
-  );
 
   @ViewChild('headerCard') headerCardTemplate: TemplateRef<any>;
   @ViewChild('dataGrid') dataGridTemplate: TemplateRef<any>;
@@ -54,7 +47,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    this.headshot.subscribe(url => document.querySelector('#favIcon').setAttribute('href', url));
     this.sheetsService
       .getSheets(
         '1G5HQaVM-T6NYPFtO-MuflVcZB2EbqmCHnkQwh33egYY',

@@ -1,0 +1,13 @@
+<div class="clr-row">
+  <div class="clr-col-4 headshot">
+    <img
+      class="headshot-image"
+      [src]="headshot | async"
+      />
+  </div>
+  <div class="clr-col-8 bio">
+    <p *ngFor="let line of intro | async">
+      {{ line }}
+    </p>
+  </div>
+</div>
