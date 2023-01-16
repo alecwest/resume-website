@@ -3,7 +3,7 @@
   "info" : {
     "title" : "resume-data",
     "description" : "API for managing my resume data",
-    "version" : "2023-01-15T17:21:01Z"
+    "version" : "2023-01-16T03:25:53Z"
   },
   "servers" : [ {
     "url" : "https://9apc2wzyzb.execute-api.us-east-2.amazonaws.com/{basePath}",
@@ -14,6 +14,16 @@
     }
   } ],
   "paths" : {
+    "/resume-data-api-gateway-dynamodb" : {
+      "x-amazon-apigateway-any-method" : {
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "content" : { }
+          }
+        }
+      }
+    },
     "/resume/{user}" : {
       "get" : {
         "parameters" : [ {
@@ -30,7 +40,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Empty"
+                  "$ref" : "#/components/schemas/UserData"
                 }
               }
             }
@@ -41,9 +51,143 @@
   },
   "components" : {
     "schemas" : {
-      "Empty" : {
-        "title" : "Empty Schema",
-        "type" : "object"
+      "UserData" : {
+        "title" : "Get Data Response",
+        "required" : [ "ConsumedCapacity", "Count", "Items", "ScannedCount" ],
+        "type" : "object",
+        "properties" : {
+          "Items" : {
+            "title" : "Resume Entries",
+            "type" : "array",
+            "items" : {
+              "title" : "Resume Entry",
+              "required" : [ "details", "end-date", "id", "start-date", "title", "type", "user" ],
+              "type" : "object",
+              "properties" : {
+                "start-date" : {
+                  "type" : "string",
+                  "description" : "Approximate date the event first began"
+                },
+                "end-date" : {
+                  "type" : "string",
+                  "description" : "Approximate date the event ended, or 'present'"
+                },
+                "user" : {
+                  "type" : "string",
+                  "description" : "The username the entry is tied to"
+                },
+                "details" : {
+                  "title" : "Entry Details",
+                  "type" : "object",
+                  "properties" : {
+                    "degree" : {
+                      "type" : "string",
+                      "description" : "For education type: the degree received"
+                    },
+                    "notable-classes" : {
+                      "type" : "array",
+                      "description" : "For education type: the notable-classes taken",
+                      "items" : {
+                        "type" : "string"
+                      }
+                    },
+                    "description" : {
+                      "type" : "object",
+                      "description" : "If description is an array, treat each entry as a single line."
+                    },
+                    "position" : {
+                      "type" : "string",
+                      "description" : "For employment type: the position in the job"
+                    },
+                    "duties" : {
+                      "type" : "array",
+                      "description" : "For employment type: each line is a description of one role performed in the job",
+                      "items" : {
+                        "type" : "string"
+                      }
+                    },
+                    "proficiency" : {
+                      "maximum" : 5,
+                      "minimum" : 1,
+                      "type" : "integer",
+                      "description" : "For skillhard type: a ranking from 1-5 of experience with the skill"
+                    },
+                    "project-source" : {
+                      "type" : "string",
+                      "description" : "For project type: a url to a project"
+                    },
+                    "social" : {
+                      "title" : "Social List",
+                      "type" : "array",
+                      "description" : "For bio type: a list of social media objects",
+                      "items" : {
+                        "title" : "Social",
+                        "required" : [ "name", "url" ],
+                        "type" : "object",
+                        "properties" : {
+                          "name" : {
+                            "type" : "string",
+                            "description" : "The name of the social site"
+                          },
+                          "url" : {
+                            "type" : "string",
+                            "description" : "The url of the social site"
+                          }
+                        }
+                      }
+                    },
+                    "introduction" : {
+                      "title" : "User introduction",
+                      "type" : "array",
+                      "items" : {
+                        "type" : "string"
+                      }
+                    },
+                    "subtitle" : {
+                      "title" : "User subtitle/subheading",
+                      "type" : "string"
+                    }
+                  },
+                  "description" : "Details about the entry. Varies by entry type"
+                },
+                "id" : {
+                  "title" : "Entry ID",
+                  "type" : "string"
+                },
+                "title" : {
+                  "title" : "Entry Title",
+                  "type" : "string"
+                },
+                "type" : {
+                  "title" : "Entry Type",
+                  "type" : "string",
+                  "enum" : [ "education", "employment", "skillhard", "project", "bio" ]
+                }
+              }
+            }
+          },
+          "Count" : {
+            "title" : "Number of items shown",
+            "type" : "integer"
+          },
+          "ScannedCount" : {
+            "title" : "Total items available",
+            "type" : "integer"
+          },
+          "ConsumedCapacity" : {
+            "title" : "Consumed Capacity",
+            "required" : [ "CapacityUnits", "TableName" ],
+            "type" : "object",
+            "properties" : {
+              "TableName" : {
+                "type" : "string"
+              },
+              "CapacityUnits" : {
+                "type" : "integer"
+              }
+            }
+          }
+        }
       }
     }
   }
