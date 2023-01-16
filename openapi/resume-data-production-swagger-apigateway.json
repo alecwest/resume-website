@@ -1,0 +1,239 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "API for managing my resume data",
+    "version" : "2023-01-16T13:44:13Z",
+    "title" : "resume-data"
+  },
+  "host" : "9apc2wzyzb.execute-api.us-east-2.amazonaws.com",
+  "basePath" : "/production",
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/resume/{user}" : {
+      "get" : {
+        "operationId" : "getEntriesByUser",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "user",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/UserData"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
+          "uri" : "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:810191593673:function:resume-data-api-gateway-dynamodb/invocations",
+          "httpMethod" : "POST",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "contentHandling" : "CONVERT_TO_TEXT"
+        }
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "user",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            },
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "type" : "mock",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'GET,OPTIONS'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "passthroughBehavior" : "when_no_match"
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Empty" : {
+      "type" : "object",
+      "title" : "Empty Schema"
+    },
+    "UserData" : {
+      "type" : "object",
+      "required" : [ "ConsumedCapacity", "Count", "Items", "ScannedCount" ],
+      "properties" : {
+        "Items" : {
+          "type" : "array",
+          "title" : "Resume Entries",
+          "items" : {
+            "type" : "object",
+            "title" : "Resume Entry",
+            "properties" : {
+              "startDate" : {
+                "type" : "string",
+                "description" : "Approximate date the event first began"
+              },
+              "endDate" : {
+                "type" : "string",
+                "description" : "Approximate date the event ended, or 'present'"
+              },
+              "user" : {
+                "type" : "string",
+                "description" : "The username the entry is tied to"
+              },
+              "details" : {
+                "type" : "object",
+                "description" : "Details about the entry. Varies by entry type",
+                "title" : "Entry Details",
+                "properties" : {
+                  "degree" : {
+                    "type" : "string",
+                    "description" : "For education type: the degree received"
+                  },
+                  "notableClasses" : {
+                    "type" : "array",
+                    "description" : "For education type: the notable-classes taken",
+                    "items" : {
+                      "type" : "string"
+                    }
+                  },
+                  "position" : {
+                    "type" : "string",
+                    "description" : "For employment type: the position in the job"
+                  },
+                  "duties" : {
+                    "type" : "array",
+                    "description" : "For employment type: each line is a description of one role performed in the job",
+                    "items" : {
+                      "type" : "string"
+                    }
+                  },
+                  "proficiency" : {
+                    "type" : "integer",
+                    "description" : "For skillhard type: a ranking from 1-5 of experience with the skill",
+                    "minimum" : 1.0,
+                    "maximum" : 5.0
+                  },
+                  "projectSource" : {
+                    "type" : "string",
+                    "description" : "For project type: a url to a project"
+                  },
+                  "social" : {
+                    "type" : "array",
+                    "description" : "For bio type: a list of social media objects",
+                    "title" : "Social List",
+                    "items" : {
+                      "type" : "object",
+                      "title" : "Social",
+                      "properties" : {
+                        "name" : {
+                          "type" : "string",
+                          "description" : "The name of the social site"
+                        },
+                        "url" : {
+                          "type" : "string",
+                          "description" : "The url of the social site"
+                        }
+                      },
+                      "required" : [ "name", "url" ]
+                    }
+                  },
+                  "introduction" : {
+                    "type" : "array",
+                    "title" : "User introduction",
+                    "items" : {
+                      "type" : "string"
+                    }
+                  },
+                  "subtitle" : {
+                    "type" : "string",
+                    "title" : "User subtitle/subheading"
+                  }
+                }
+              },
+              "id" : {
+                "type" : "string",
+                "title" : "Entry ID"
+              },
+              "title" : {
+                "type" : "string",
+                "title" : "Entry Title"
+              },
+              "type" : {
+                "type" : "string",
+                "title" : "Entry Type",
+                "enum" : [ "education", "employment", "skillhard", "project", "bio" ]
+              }
+            },
+            "required" : [ "details", "endDate", "id", "startDate", "title", "type", "user" ]
+          }
+        },
+        "Count" : {
+          "type" : "integer",
+          "title" : "Number of items shown"
+        },
+        "ScannedCount" : {
+          "type" : "integer",
+          "title" : "Total items available"
+        },
+        "ConsumedCapacity" : {
+          "type" : "object",
+          "title" : "Consumed Capacity",
+          "properties" : {
+            "TableName" : {
+              "type" : "string"
+            },
+            "CapacityUnits" : {
+              "type" : "integer"
+            }
+          },
+          "required" : [ "CapacityUnits", "TableName" ]
+        }
+      },
+      "title" : "Get Data Response"
+    }
+  }
+}
