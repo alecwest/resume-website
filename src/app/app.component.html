@@ -45,64 +45,33 @@
       </div>
       <ng-template #dataCards>
         <!-- Card Style Data -->
-        <div
-          class="clr-row fullscreen"
-          [id]="sheet.metadata.header"
-          *ngFor="let sheet of getTableSheets()"
-        >
-          <div class="clr-col-lg-8 clr-offset-lg-2 clr-col-12">
-            <div class="card center-vertical">
-              <div class="card-header">
-                {{ sheet.metadata.header }}
-              </div>
-              <div class="card-block">
-                <div class="card-text">
-                  <ng-container
-                    *ngTemplateOutlet="
-                      getDataLayout(sheet);
-                      context: { $implicit: sheet }
-                    "
-                  ></ng-container>
+        <ng-container *ngIf="(entryLayout | async) as layouts">
+          <div
+            class="clr-row fullscreen"
+            id="{{type}}-entries"
+            *ngFor="let type of entryTypes | async;"
+          >
+            <div class="clr-col-lg-8 clr-offset-lg-2 clr-col-12" *ngIf="(entriesByType$ | async) as entriesByType">
+              <div class="card center-vertical">
+                <div class="card-header">
+                  {{ type | titlecase }}
+                </div>
+                <div class="card-block">
+                  <div class="card-text">
+                    <ng-container [ngSwitch]="layouts[type]">
+                      <app-bio *ngSwitchCase="'headerCard'" [bio]="entriesByType[type][0]"></app-bio>
+                      <app-datagrid *ngSwitchCase="'newDataGrid'" [resumeEntries]="entriesByType[type]"></app-datagrid>
+                      <p *ngSwitchDefault>WIP</p>
+                    </ng-container>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </ng-container>
       </ng-template>
     </div>
   </div>
-
-  <ng-template #headerCard let-sheet>
-    <app-bio [bio]="bio"></app-bio>
-  </ng-template>
-
-  <ng-template #dataGrid let-sheet>
-    <clr-datagrid>
-      <ng-container *ngFor="let columnName of getColumnNames(sheet)">
-        <clr-dg-column [clrDgField]="columnName">
-          {{ columnName | viewFriendly | titlecase }}
-        </clr-dg-column>
-      </ng-container>
-
-      <clr-dg-row *clrDgItems="let row of getDataRows(sheet)" [clrDgItem]="row">
-        <clr-dg-cell *ngFor="let columnName of getColumnNames(sheet)">
-          <ng-container *ngTemplateOutlet="text; context: { $implicit: row[columnName] }"></ng-container>
-        </clr-dg-cell>
-
-        <clr-dg-row-detail *clrIfExpanded>
-          <ul class="list-unstyled">
-            <ng-container
-              *ngFor="let detailColumn of getLargeColumnNames(sheet)"
-            >
-              <li *ngFor="let line of row[detailColumn]?.split('\n')">
-                <ng-container *ngTemplateOutlet="text; context: { $implicit: line }"></ng-container>
-              </li>
-            </ng-container>
-          </ul>
-        </clr-dg-row-detail>
-      </clr-dg-row>
-    </clr-datagrid>
-  </ng-template>
 
   <ng-template #iconGrid let-sheet>
     <div class="clr-row">
@@ -155,11 +124,6 @@
   </ng-template>
 
   <ng-template #text let-context>
-    <ng-container *ngIf="isUrl(context); else regular">
-      <a [href]="context" target="_blank">{{ context }}</a>
-    </ng-container>
-    <ng-template #regular>
-      {{ context }}
-    </ng-template>
+    <app-text [context]="context"></app-text>
   </ng-template>
 </clr-main-container>

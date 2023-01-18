@@ -1,17 +1,17 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { SheetsService, ParsedSheet, RowData } from './sheets.service';
 import { Email, ResumeEntriesByType } from './models';
 import { ResumeDataService } from './resume-data.service';
 import { ResumeEntry } from './api/v1';
-import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { filter, map, share, shareReplay, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'website';
 
   sheetsData: ParsedSheet[];
@@ -24,8 +24,13 @@ export class AppComponent implements OnInit {
 
   resume: string;
 
+  destroy$: Subject<boolean> = new Subject<boolean>();
+
   entriesByType$: Observable<ResumeEntriesByType> = this.resumeDataService.getEntriesByUser("alecwest").pipe(
-    map(resp => ResumeEntriesByType.fromResumeEntries(resp.Items))
+    shareReplay(1),
+    takeUntil(this.destroy$),
+    map(resp => ResumeEntriesByType.fromResumeEntries(resp.Items)),
+    tap(_ => this.loading = false)
   );
 
   bio: Observable<ResumeEntry> = this.entriesByType$.pipe(
@@ -35,11 +40,30 @@ export class AppComponent implements OnInit {
 
   name: Observable<string> = this.bio.pipe(map(bioEntry => bioEntry.title));
 
-  @ViewChild('headerCard') headerCardTemplate: TemplateRef<any>;
-  @ViewChild('dataGrid') dataGridTemplate: TemplateRef<any>;
-  @ViewChild('iconGrid') iconGridTemplate: TemplateRef<any>;
-  @ViewChild('table') tableTemplate: TemplateRef<any>;
-  @ViewChild('verticalTable') verticalTableTemplate: TemplateRef<any>;
+  entryTypes: Observable<ResumeEntry.TypeEnum[]> = this.entriesByType$.pipe(map(entry => Object.keys(entry) as ResumeEntry.TypeEnum[]));
+
+  entryLayout: Observable<{[type: string]: string}> = this.entriesByType$.pipe(
+    map(entriesByType => {
+      return Object.keys(entriesByType)
+        .reduce<{[type: string]: string}>((accumulator, type) => {
+          const entries: ResumeEntry[] = entriesByType[type];
+          if (type === ResumeEntry.TypeEnum.Bio) {
+            accumulator[type] = 'headerCard';
+          } else if (entries.every(entry => entry.details && Object.values(entry.details)
+            .some(entryDetailValue => Array.isArray(entryDetailValue)))) {
+            // for every entry, there is some value in the details section that is an array
+            accumulator[type] = 'newDataGrid';
+          } else {
+            accumulator[type] = 'wip';
+          }
+          return accumulator;
+        }, {});
+    })
+  );
+
+  getType(type: ResumeEntry.TypeEnum): Observable<ResumeEntry[]> {
+    return this.entriesByType$.pipe(map(entriesByType => entriesByType[type]));
+  }
 
   loading = false;
 
@@ -68,6 +92,11 @@ export class AppComponent implements OnInit {
       });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+  }
+
   private getResume(): string {
     const resume: string = this.aboutSheet.values[0].resume;
     return resume;
@@ -85,23 +114,6 @@ export class AppComponent implements OnInit {
     return sheet.metadata.largeTextColumns;
   }
 
-  getDataLayout(sheet: ParsedSheet): TemplateRef<any> {
-    switch (sheet.metadata.layout) {
-      case 'headerCard':
-        return this.headerCardTemplate;
-      case 'dataGrid':
-        return this.dataGridTemplate;
-      case 'iconGrid':
-        return this.iconGridTemplate;
-      case 'table':
-        return this.tableTemplate;
-      case 'verticalTable':
-        return this.verticalTableTemplate;
-      default:
-        return this.tableTemplate;
-    }
-  }
-
   getDataRows(sheet: ParsedSheet): RowData[] {
     return sheet.values;
   }
@@ -111,9 +123,5 @@ export class AppComponent implements OnInit {
       technical: 'code',
       personal: 'user',
     }[element];
-  }
-
-  isUrl(element: string): boolean {
-    return element.includes('.com');
   }
 }

@@ -9,12 +9,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ViewFriendlyPipe } from './view-friendly.pipe';
 import { ApiModule } from './api/v1';
 import { BioComponent } from './bio/bio.component';
+import { DatagridComponent } from './datagrid/datagrid.component';
+import { TextComponent } from './text/text.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ViewFriendlyPipe,
-    BioComponent
+    BioComponent,
+    DatagridComponent,
+    TextComponent
   ],
   imports: [
     BrowserModule,
