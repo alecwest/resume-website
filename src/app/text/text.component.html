@@ -1,0 +1,6 @@
+<ng-container *ngIf="isUrl(context); else regular">
+  <a [href]="context" target="_blank">{{ context }}</a>
+</ng-container>
+<ng-template #regular>
+  {{ context }}
+</ng-template>
