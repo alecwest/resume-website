@@ -1,6 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ResumeEntry } from '../api/v1';
 
 @Component({
@@ -8,21 +6,23 @@ import { ResumeEntry } from '../api/v1';
   templateUrl: './bio.component.html',
   styleUrls: ['./bio.component.scss']
 })
-export class BioComponent implements OnInit {
+export class BioComponent implements OnChanges {
 
   @Input()
-  bio: Observable<ResumeEntry> = EMPTY;
+  bio: ResumeEntry;
 
-  name: Observable<string> = this.bio.pipe(map(bioEntry => bioEntry.title));
+  name: string;
 
-  intro: Observable<string[]> = this.bio.pipe(map(bioEntry => bioEntry.details.description));
+  intro: string[];
 
-  headshot: Observable<string> = this.bio.pipe(
-    filter(entry => entry.details.images.length > 0),
-    map(bioEntry => bioEntry.details.images[0])
-  );
+  headshot: string;
 
-  ngOnInit() {
-    this.headshot.subscribe(url => document.querySelector('#favIcon').setAttribute('href', url));
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.bio) {
+      this.name = this.bio.title;
+      this.intro = this.bio.details.description;
+      this.headshot = this.bio.details.images.length > 0 && this.bio.details.images[0];
+      document.querySelector('#favIcon').setAttribute('href', this.headshot);
+    }
   }
 }

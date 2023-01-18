@@ -2,11 +2,11 @@
   <div class="clr-col-4 headshot">
     <img
       class="headshot-image"
-      [src]="headshot | async"
+      [src]="headshot"
       />
   </div>
   <div class="clr-col-8 bio">
-    <p *ngFor="let line of intro | async">
+    <p *ngFor="let line of intro">
       {{ line }}
     </p>
   </div>
