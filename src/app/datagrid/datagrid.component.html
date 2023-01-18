@@ -5,21 +5,21 @@
     </clr-dg-column>
   </ng-container>
 
-  <clr-dg-row *clrDgItems="let row of resumeEntries" [clrDgItem]="row">
+  <clr-dg-row *clrDgItems="let row of flattenedEntries" [clrDgItem]="row">
     <clr-dg-cell *ngFor="let columnName of columnNames">
       <app-text [context]="row[columnName]"></app-text>
     </clr-dg-cell>
 
     <clr-dg-row-detail *clrIfExpanded>
-      <ul class="list-unstyled">
-        <ng-container
-          *ngFor="let detailKey of getDetailColumns(row)"
-          >
-        <li *ngFor="let line of row[detailKey]">
+      <ng-container *ngFor="let detailKey of detailColumns">
+        <!-- TODO make me prettier -->
+        <p>{{ detailKey | viewFriendly | titlecase }}</p>
+        <ul class="list-unstyled">
+          <li *ngFor="let line of row[detailKey]">
             <app-text [context]="line"></app-text>
-        </li>
-        </ng-container>
-      </ul>
+          </li>
+        </ul>
+      </ng-container>
     </clr-dg-row-detail>
   </clr-dg-row>
 </clr-datagrid>
