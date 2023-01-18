@@ -1,0 +1,25 @@
+<clr-datagrid>
+  <ng-container *ngFor="let columnName of columnNames">
+    <clr-dg-column [clrDgField]="columnName">
+      {{ columnName | viewFriendly | titlecase }}
+    </clr-dg-column>
+  </ng-container>
+
+  <clr-dg-row *clrDgItems="let row of resumeEntries" [clrDgItem]="row">
+    <clr-dg-cell *ngFor="let columnName of columnNames">
+      <app-text [context]="row[columnName]"></app-text>
+    </clr-dg-cell>
+
+    <clr-dg-row-detail *clrIfExpanded>
+      <ul class="list-unstyled">
+        <ng-container
+          *ngFor="let detailKey of getDetailColumns(row)"
+          >
+        <li *ngFor="let line of row[detailKey]">
+            <app-text [context]="line"></app-text>
+        </li>
+        </ng-container>
+      </ul>
+    </clr-dg-row-detail>
+  </clr-dg-row>
+</clr-datagrid>
