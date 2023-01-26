@@ -53,6 +53,8 @@ export class AppComponent implements OnInit, OnDestroy {
             .some(entryDetailValue => Array.isArray(entryDetailValue)))) {
             // for every entry, there is some value in the details section that is an array
             accumulator[type] = 'newDataGrid';
+          } else if (entries.every(entry => entry.details.proficiency)) { // TODO consider using something more generic like "ranking"
+            accumulator[type] = 'list';
           } else {
             accumulator[type] = 'wip';
           }

@@ -11,6 +11,7 @@ import { ApiModule } from './api/v1';
 import { BioComponent } from './bio/bio.component';
 import { DatagridComponent } from './datagrid/datagrid.component';
 import { TextComponent } from './text/text.component';
+import { RankComponent } from './rank/rank.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { TextComponent } from './text/text.component';
     ViewFriendlyPipe,
     BioComponent,
     DatagridComponent,
-    TextComponent
+    TextComponent,
+    RankComponent
   ],
   imports: [
     BrowserModule,
