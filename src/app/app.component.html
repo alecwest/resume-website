@@ -31,31 +31,15 @@
   <div class="content-container">
     <div class="content-area">
       <!-- Card Style Data -->
-      <ng-container *ngIf="(entryLayout | async) as layouts">
-        <div
-          class="clr-row fullscreen"
-          [id]="type"
-          *ngFor="let type of entryTypes | async;"
-        >
-          <div class="clr-col-lg-8 clr-offset-lg-2 clr-col-12" *ngIf="(entriesByType$ | async) as entriesByType">
-            <div class="card center-vertical">
-              <div class="card-header">
-                {{ type | titlecase }}
-              </div>
-              <div class="card-block">
-                <div class="card-text">
-                  <ng-container [ngSwitch]="layouts[type]">
-                    <app-bio *ngSwitchCase="'headerCard'" [bio]="entriesByType[type][0]"></app-bio>
-                    <app-datagrid *ngSwitchCase="'newDataGrid'" [resumeEntries]="entriesByType[type]"></app-datagrid>
-                    <app-rank *ngSwitchCase="'list'" [resumeEntries]="entriesByType[type]"></app-rank>
-                    <p *ngSwitchDefault>WIP</p>
-                  </ng-container>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ng-container>
+      <div
+        class="clr-row fullscreen"
+        [id]="type"
+        *ngFor="let type of entryTypes | async;"
+      >
+        <ng-container *ngIf="(entriesByType$ | async) as entriesByType">
+          <app-card class="clr-col-lg-8 clr-offset-lg-2 clr-col-12" [resumeEntries]="entriesByType[type]"></app-card>
+        </ng-container>
+      </div>
     </div>
   </div>
 </clr-main-container>

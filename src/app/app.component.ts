@@ -1,6 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ParsedSheet } from './sheets.service';
-import { Email, ResumeEntriesByType } from './models';
+import { ResumeEntriesByType } from './models';
 import { ResumeDataService } from './resume-data.service';
 import { ResumeEntry } from './api/v1';
 import { Observable, Subject } from 'rxjs';
@@ -16,16 +15,6 @@ export class AppComponent implements OnDestroy {
   loading = false;
 
   title = 'website';
-
-  sheetsData: ParsedSheet[];
-
-  aboutSheet: ParsedSheet;
-
-  email: Email;
-
-  phone: string;
-
-  resume: string;
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -44,31 +33,6 @@ export class AppComponent implements OnDestroy {
   name: Observable<string> = this.bio.pipe(map(bioEntry => bioEntry.title));
 
   entryTypes: Observable<ResumeEntry.TypeEnum[]> = this.entriesByType$.pipe(map(entry => Object.keys(entry) as ResumeEntry.TypeEnum[]));
-
-  entryLayout: Observable<{[type: string]: string}> = this.entriesByType$.pipe(
-    map(entriesByType => {
-      return Object.keys(entriesByType)
-        .reduce<{[type: string]: string}>((accumulator, type) => {
-          const entries: ResumeEntry[] = entriesByType[type];
-          if (type === ResumeEntry.TypeEnum.Bio) {
-            accumulator[type] = 'headerCard';
-          } else if (entries.every(entry => entry.details && Object.values(entry.details)
-            .some(entryDetailValue => Array.isArray(entryDetailValue)))) {
-            // for every entry, there is some value in the details section that is an array
-            accumulator[type] = 'newDataGrid';
-          } else if (entries.every(entry => entry.details.proficiency)) { // TODO consider using something more generic like "ranking"
-            accumulator[type] = 'list';
-          } else {
-            accumulator[type] = 'wip';
-          }
-          return accumulator;
-        }, {});
-    })
-  );
-
-  getType(type: ResumeEntry.TypeEnum): Observable<ResumeEntry[]> {
-    return this.entriesByType$.pipe(map(entriesByType => entriesByType[type]));
-  }
 
   constructor(private resumeDataService: ResumeDataService) {}
 

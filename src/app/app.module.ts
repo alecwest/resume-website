@@ -12,6 +12,7 @@ import { BioComponent } from './bio/bio.component';
 import { DatagridComponent } from './datagrid/datagrid.component';
 import { TextComponent } from './text/text.component';
 import { RankComponent } from './rank/rank.component';
+import { CardComponent } from './card/card.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { RankComponent } from './rank/rank.component';
     BioComponent,
     DatagridComponent,
     TextComponent,
-    RankComponent
+    RankComponent,
+    CardComponent
   ],
   imports: [
     BrowserModule,

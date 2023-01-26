@@ -1,0 +1,15 @@
+<div class="card center-vertical">
+  <div class="card-header">
+    {{ type | titlecase }}
+  </div>
+  <div class="card-block">
+    <div class="card-text">
+      <ng-container [ngSwitch]="layout">
+        <app-bio *ngSwitchCase="'headerCard'" [bio]="resumeEntries[0]"></app-bio>
+        <app-datagrid *ngSwitchCase="'newDataGrid'" [resumeEntries]="resumeEntries"></app-datagrid>
+        <app-rank *ngSwitchCase="'list'" [resumeEntries]="resumeEntries"></app-rank>
+        <p *ngSwitchDefault>WIP</p>
+      </ng-container>
+    </div>
+  </div>
+</div>
