@@ -1,17 +1,20 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { SheetsService, ParsedSheet, RowData } from './sheets.service';
+import { Component, OnDestroy } from '@angular/core';
+import { ParsedSheet } from './sheets.service';
 import { Email, ResumeEntriesByType } from './models';
 import { ResumeDataService } from './resume-data.service';
 import { ResumeEntry } from './api/v1';
 import { Observable, Subject } from 'rxjs';
-import { filter, map, share, shareReplay, takeUntil, tap } from 'rxjs/operators';
+import { filter, map, shareReplay, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnDestroy {
+  // TODO support loading again - maybe use https://medium.com/angular-in-depth/angular-show-loading-indicator-when-obs-async-is-not-yet-resolved-9d8e5497dd8
+  loading = false;
+
   title = 'website';
 
   sheetsData: ParsedSheet[];
@@ -26,7 +29,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
-  entriesByType$: Observable<ResumeEntriesByType> = this.resumeDataService.getEntriesByUser("alecwest").pipe(
+  entriesByType$: Observable<ResumeEntriesByType> = this.resumeDataService.getEntriesByUser('alecwest').pipe(
     shareReplay(1),
     takeUntil(this.destroy$),
     map(resp => ResumeEntriesByType.fromResumeEntries(resp.Items)),
@@ -67,63 +70,10 @@ export class AppComponent implements OnInit, OnDestroy {
     return this.entriesByType$.pipe(map(entriesByType => entriesByType[type]));
   }
 
-  loading = false;
-
-  constructor(private sheetsService: SheetsService, private resumeDataService: ResumeDataService) {}
-
-  ngOnInit() {
-    this.loading = true;
-    this.sheetsService
-      .getSheets(
-        '1G5HQaVM-T6NYPFtO-MuflVcZB2EbqmCHnkQwh33egYY',
-        { sheetName: 'AboutMe', start: 'A', end: 'Z' },
-        { sheetName: 'WorkHistory', start: 'A', end: 'Z' },
-        { sheetName: 'Education', start: 'A', end: 'Z' },
-        { sheetName: 'Projects', start: 'A', end: 'Z' },
-        { sheetName: 'Skills', start: 'A', end: 'Z' },
-        { sheetName: 'Languages', start: 'A', end: 'Z' },
-        { sheetName: 'Websites', start: 'A', end: 'Z' }
-      )
-      .subscribe((resp) => {
-        this.sheetsData = resp;
-        this.aboutSheet = this.sheetsData.find((sheet) =>
-          sheet.sheetName.includes('About')
-        );
-        this.resume = this.getResume();
-        this.loading = false;
-      });
-  }
+  constructor(private resumeDataService: ResumeDataService) {}
 
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
-  }
-
-  private getResume(): string {
-    const resume: string = this.aboutSheet.values[0].resume;
-    return resume;
-  }
-
-  getTableSheets(): ParsedSheet[] {
-    return this.sheetsData;
-  }
-
-  getColumnNames(sheet: ParsedSheet): string[] {
-    return sheet.metadata.columns;
-  }
-
-  getLargeColumnNames(sheet: ParsedSheet): string[] {
-    return sheet.metadata.largeTextColumns;
-  }
-
-  getDataRows(sheet: ParsedSheet): RowData[] {
-    return sheet.values;
-  }
-
-  getIconClass(element: string) {
-    return {
-      technical: 'code',
-      personal: 'user',
-    }[element];
   }
 }
