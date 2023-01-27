@@ -14,6 +14,6 @@ export class ViewFriendlyPipe implements PipeTransform {
     if (realColumnNameStart > -1 && realColumnNameEnd > -1) {
       return value.substring(realColumnNameStart + 1, realColumnNameEnd);
     }
-    return value;
+    return value.replace(/(\S)([A-Z])/g, '$1 $2');
   }
 }

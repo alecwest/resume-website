@@ -13,6 +13,7 @@ import { DatagridComponent } from './datagrid/datagrid.component';
 import { TextComponent } from './text/text.component';
 import { RankComponent } from './rank/rank.component';
 import { CardComponent } from './card/card.component';
+import { BetterDatePipe } from './betterdate.pipe';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { CardComponent } from './card/card.component';
     DatagridComponent,
     TextComponent,
     RankComponent,
-    CardComponent
+    CardComponent,
+    BetterDatePipe
   ],
   imports: [
     BrowserModule,

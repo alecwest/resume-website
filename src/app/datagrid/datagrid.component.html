@@ -12,7 +12,6 @@
 
     <clr-dg-row-detail *clrIfExpanded>
       <ng-container *ngFor="let detailKey of detailColumns">
-        <!-- TODO make me prettier -->
         <p>{{ detailKey | viewFriendly | titlecase }}</p>
         <ul class="list-unstyled">
           <li *ngFor="let line of row[detailKey]">

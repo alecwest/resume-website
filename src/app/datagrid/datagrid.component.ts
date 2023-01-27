@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { ResumeEntry } from "../api/v1";
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ResumeEntry } from '../api/v1';
 
 interface FlattenedEntry extends ResumeEntry {
   [key: string]: any;
@@ -7,17 +7,14 @@ interface FlattenedEntry extends ResumeEntry {
 
 /**
  * TODO:
- * 1. Exclude certain columns
- * 2. Improve column names
  * 3. Make detail view look better
  * 4. Merge rows? (all adtran title rows)
- * 5. Read and sort dates better
  */
 
 @Component({
-  selector: "app-datagrid",
-  templateUrl: "./datagrid.component.html",
-  styleUrls: ["./datagrid.component.scss"],
+  selector: 'app-datagrid',
+  templateUrl: './datagrid.component.html',
+  styleUrls: ['./datagrid.component.scss'],
 })
 export class DatagridComponent implements OnChanges {
   @Input()
@@ -33,12 +30,24 @@ export class DatagridComponent implements OnChanges {
       const flattened = { ...entry, ...entry.details };
       delete flattened.details;
       return flattened;
+    })
+    .sort((a, b) => {
+      const aParsed = Date.parse(a.endDate.replace(/[\\\/]/g, '-'));
+      const bParsed = Date.parse(b.endDate.replace(/[\\\/]/g, '-'));
+      return a.endDate === 'present' ? -1 : bParsed - aParsed;
     });
     if (this.flattenedEntries.length > 0) {
       const firstEntry = this.flattenedEntries[0];
-      this.columnNames = Object.keys(firstEntry).filter((entryKey) => {
-        return typeof firstEntry[entryKey] === "string";
-      });
+      this.columnNames = Object.keys(firstEntry)
+        .filter((entryKey) => {
+          return typeof firstEntry[entryKey] === 'string';
+        })
+        .filter((entryKey) => !['id', 'type', 'user'].includes(entryKey))
+        .sort((a, b) => {
+          const order = { title: -1, startDate: 2, endDate: 3 };
+          return (order[a] || 0) - (order[b] || 0);
+        });
+
       this.detailColumns = Object.keys(firstEntry).filter((entryKey) => {
         return Array.isArray(firstEntry[entryKey]);
       });
