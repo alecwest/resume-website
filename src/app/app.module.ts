@@ -15,6 +15,7 @@ import { RankComponent } from './rank/rank.component';
 import { CardComponent } from './card/card.component';
 import { BetterDatePipe } from './betterdate.pipe';
 import { UrlPipe } from './url.pipe';
+import { CdsModule } from '@cds/angular';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { UrlPipe } from './url.pipe';
     HttpClientModule,
     ClarityModule,
     BrowserAnimationsModule,
-    ApiModule
+    ApiModule,
+    CdsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
