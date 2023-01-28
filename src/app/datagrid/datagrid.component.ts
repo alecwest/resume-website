@@ -50,6 +50,9 @@ export class DatagridComponent implements OnChanges {
 
       this.detailColumns = Object.keys(firstEntry).filter((entryKey) => {
         return Array.isArray(firstEntry[entryKey]);
+      }).sort((a, b) => {
+        const order = { description: -1 };
+        return (order[a] || 0) - (order[b] || 0);
       });
     }
   }
