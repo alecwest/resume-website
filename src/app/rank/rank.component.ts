@@ -9,4 +9,15 @@ import { ResumeEntry } from '../api/v1';
 export class RankComponent {
   @Input()
   resumeEntries: ResumeEntry[];
+
+  protected sorted(resumeEntries: ResumeEntry[]): ResumeEntry[] {
+    return resumeEntries.sort((a, b) => {
+      const skillSort = b.details.proficiency - a.details.proficiency;
+      if (skillSort === 0) {
+        return a.title.localeCompare(b.title);
+      } else {
+        return skillSort;
+      }
+    });
+  }
 }

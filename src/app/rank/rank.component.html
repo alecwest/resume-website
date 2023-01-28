@@ -1,10 +1,14 @@
 <div class="clr-row">
-  <ng-container *ngFor="let row of resumeEntries; let i = index">
+  <ng-container *ngFor="let row of sorted(resumeEntries); let i = index">
     <div class="clr-col icon-grid-content">
       <h4>{{ row.title | titlecase }}</h4>
 
-      <!-- TODO use something more flashy - an svg or component maybe -->
-      <p>{{ row.details.proficiency }}</p>
+      <div class="progress-block">
+        <div class="progress">
+            <progress value="{{row.details.proficiency}}" max="5" [attr.displayval]="row.details.proficiency + '/5'"></progress>
+        </div>
+        <span>{{row.details.proficiency}}/5</span>
+    </div>
     </div>
     <div class="clr-break-row" *ngIf="i % 3 === 2"></div>
   </ng-container>
