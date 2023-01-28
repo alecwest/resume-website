@@ -18,21 +18,30 @@ export class AppComponent implements OnDestroy {
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
-  entriesByType$: Observable<ResumeEntriesByType> = this.resumeDataService.getEntriesByUser('alecwest').pipe(
+  entriesByType$: Observable<
+    ResumeEntriesByType
+  > = this.resumeDataService.getEntriesByUser('alecwest').pipe(
     shareReplay(1),
     takeUntil(this.destroy$),
-    map(resp => ResumeEntriesByType.fromResumeEntries(resp.Items)),
-    tap(_ => this.loading = false)
+    map((resp) => ResumeEntriesByType.fromResumeEntries(resp.Items))
   );
 
   bio: Observable<ResumeEntry> = this.entriesByType$.pipe(
-    filter(entries => entries.bio.length > 0),
-    map(entries => entries.bio[0])
+    filter((entries) => entries.bio.length > 0),
+    map((entries) => entries.bio[0])
   );
 
-  name: Observable<string> = this.bio.pipe(map(bioEntry => bioEntry.title));
+  name: Observable<string> = this.bio.pipe(map((bioEntry) => bioEntry.title));
 
-  entryTypes: Observable<ResumeEntry.TypeEnum[]> = this.entriesByType$.pipe(map(entry => Object.keys(entry) as ResumeEntry.TypeEnum[]));
+  entryTypes: Observable<ResumeEntry.TypeEnum[]> = this.entriesByType$.pipe(
+    map(
+      (entry) =>
+        Object.keys(entry).sort((a, b) => {
+          const order = { bio: -1 };
+          return (order[a] || 0) - (order[b] || 0);
+        }) as ResumeEntry.TypeEnum[]
+    )
+  );
 
   constructor(private resumeDataService: ResumeDataService) {}
 

@@ -7,7 +7,6 @@ interface FlattenedEntry extends ResumeEntry {
 
 /**
  * TODO:
- * 3. Make detail view look better
  * 4. Merge rows? (all adtran title rows)
  */
 
