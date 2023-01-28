@@ -1,5 +1,5 @@
 <ng-container *ngIf="isUrl(context); else regular">
-  <a [href]="context" target="_blank">{{ context }}</a>
+  <a [href]="context" target="_blank">{{ context | url }}</a>
 </ng-container>
 <ng-template #regular>
   {{ context | betterDate }}

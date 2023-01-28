@@ -14,6 +14,7 @@ import { TextComponent } from './text/text.component';
 import { RankComponent } from './rank/rank.component';
 import { CardComponent } from './card/card.component';
 import { BetterDatePipe } from './betterdate.pipe';
+import { UrlPipe } from './url.pipe';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { BetterDatePipe } from './betterdate.pipe';
     TextComponent,
     RankComponent,
     CardComponent,
-    BetterDatePipe
+    BetterDatePipe,
+    UrlPipe
   ],
   imports: [
     BrowserModule,
