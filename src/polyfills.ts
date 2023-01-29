@@ -51,3 +51,9 @@ import 'zone.js';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+// Needed for amplify with Angular 6+ https://ui.docs.amplify.aws/angular/getting-started/troubleshooting
+(window as any).global = window;
+(window as any).process = {
+  env: { DEBUG: undefined },
+};

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient } from '@angular/common/http';
 import { ClarityModule } from '@clr/angular';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ViewFriendlyPipe } from './view-friendly.pipe';
@@ -16,6 +16,7 @@ import { CardComponent } from './card/card.component';
 import { BetterDatePipe } from './betterdate.pipe';
 import { UrlPipe } from './url.pipe';
 import { CdsModule } from '@cds/angular';
+import { AmplifyAuthenticatorModule } from '@aws-amplify/ui-angular';
 
 @NgModule({
   declarations: [
@@ -32,13 +33,15 @@ import { CdsModule } from '@cds/angular';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule,
     ClarityModule,
     BrowserAnimationsModule,
     ApiModule,
-    CdsModule
+    CdsModule,
+    AmplifyAuthenticatorModule
   ],
-  providers: [],
+  providers: [
+    provideHttpClient()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
