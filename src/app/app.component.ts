@@ -1,29 +1,28 @@
-import { Component, OnDestroy } from '@angular/core';
-import { ResumeEntriesByType } from './models';
-import { ResumeDataService } from './resume-data.service';
-import { ResumeEntry } from './api/v1';
-import { Observable, Subject } from 'rxjs';
-import { filter, map, shareReplay, takeUntil, tap } from 'rxjs/operators';
+import { Component, OnDestroy } from "@angular/core";
+import { ResumeEntriesByType } from "./models";
+import { ResumeDataService } from "./resume-data.service";
+import { ResumeEntry } from "./api/v1";
+import { Observable, Subject } from "rxjs";
+import { filter, map, shareReplay, takeUntil, tap } from "rxjs/operators";
+import { AuthenticatorService } from "@aws-amplify/ui-angular";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnDestroy {
   // TODO support loading again - maybe use https://medium.com/angular-in-depth/angular-show-loading-indicator-when-obs-async-is-not-yet-resolved-9d8e5497dd8
   loading = false;
 
-  title = 'website';
+  title = "website";
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   entriesByType$: Observable<
     ResumeEntriesByType
-  > = this.resumeDataService.getEntriesByUser('alecwest').pipe(
-    shareReplay(1),
-    takeUntil(this.destroy$),
-    map((resp) => ResumeEntriesByType.fromResumeEntries(resp.Items))
+  > = this.resumeDataService.getEntriesByType("alecwest").pipe(
+    takeUntil(this.destroy$)
   );
 
   bio: Observable<ResumeEntry> = this.entriesByType$.pipe(
@@ -33,20 +32,30 @@ export class AppComponent implements OnDestroy {
 
   name: Observable<string> = this.bio.pipe(map((bioEntry) => bioEntry.title));
 
-  entryTypes: Observable<ResumeEntry.TypeEnum[]> = this.entriesByType$.pipe(
-    map(
-      (entry) =>
-        Object.keys(entry).sort((a, b) => {
-          const order = { bio: -1 };
-          return (order[a] || 0) - (order[b] || 0);
-        }) as ResumeEntry.TypeEnum[]
-    )
-  );
+  get user() {
+    return this.authenticator.user;
+  }
 
-  constructor(private resumeDataService: ResumeDataService) {}
+  constructor(
+    private resumeDataService: ResumeDataService,
+    private authenticator: AuthenticatorService
+  ) {}
 
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
+  }
+
+  isAuthenticated(): boolean {
+    return this.authenticator.authStatus === 'authenticated';
+  }
+
+  onLoginClick() {
+    console.log('login');
+
+  }
+
+  onLogoutClick() {
+    this.authenticator.signOut();
   }
 }

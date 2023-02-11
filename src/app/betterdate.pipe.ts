@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Pipe } from '@angular/core';
 
 @Pipe({
+  standalone: true,
   name: 'betterDate'
 })
 export class BetterDatePipe extends DatePipe {

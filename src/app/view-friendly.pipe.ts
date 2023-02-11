@@ -5,6 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
  * If none is found, return original string
  */
 @Pipe({
+  standalone: true,
   name: 'viewFriendly',
 })
 export class ViewFriendlyPipe implements PipeTransform {

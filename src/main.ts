@@ -5,8 +5,8 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 // Load cds icons https://core.clarity.design/foundation/icons/
-import { ClarityIcons, flameIcon } from '@cds/core/icon';
-ClarityIcons.addIcons(flameIcon);
+import { ClarityIcons, flameIcon, loginIcon } from '@cds/core/icon';
+ClarityIcons.addIcons(flameIcon, loginIcon);
 
 // Load AWS Amplify
 import { Amplify } from 'aws-amplify';

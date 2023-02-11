@@ -1,5 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ClarityModule } from '@clr/angular';
 import { ResumeEntry } from '../api/v1';
+import { TextComponent } from '../text/text.component';
+import { ViewFriendlyPipe } from '../view-friendly.pipe';
 
 interface FlattenedEntry extends ResumeEntry {
   [key: string]: any;
@@ -11,9 +15,16 @@ interface FlattenedEntry extends ResumeEntry {
  */
 
 @Component({
+  standalone: true,
   selector: 'app-datagrid',
   templateUrl: './datagrid.component.html',
   styleUrls: ['./datagrid.component.scss'],
+  imports: [
+    ClarityModule,
+    ViewFriendlyPipe,
+    TextComponent,
+    CommonModule
+  ]
 })
 export class DatagridComponent implements OnChanges {
   @Input()

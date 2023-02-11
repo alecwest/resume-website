@@ -1,55 +1,34 @@
-<amplify-authenticator [hideSignUp]="true">
-  <ng-template
-    amplifySlot="authenticated"
-    let-user="user"
-    let-signOut="signOut"
-  >
-    <clr-main-container>
-      <clr-header class="header header-3">
-        <div class="branding">
-          <a href="/" class="nav-link">
-            <cds-icon shape="flame"></cds-icon>
-            <span class="title">{{ name | async }}</span>
-          </a>
-        </div>
-        <div class="header-actions">
-          <clr-dropdown>
-            <button class="nav-text" clrDropdownTrigger>
-              {{ user.attributes.email }}
-              <cds-icon shape="angle" direction="down"></cds-icon>
-            </button>
-            <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
-              <button (click)="signOut()" clrDropdownItem>Log out</button>
-            </clr-dropdown-menu>
-          </clr-dropdown>
-        </div>
-      </clr-header>
+<clr-main-container>
+  <clr-header class="header header-3">
+    <div class="branding">
+      <a href="/" class="nav-link">
+        <cds-icon shape="flame"></cds-icon>
+        <span class="title">{{ name | async }}</span>
+      </a>
+    </div>
+    <div class="header-actions">
+      <a
+        class="nav-link nav-icon"
+        *ngIf="!isAuthenticated(); else loggedInMenu"
+        routerLink="login"
+        aria-label="login"
+      >
+        <cds-icon shape="login"></cds-icon>
+      </a>
+      <ng-template #loggedInMenu>
+        <clr-dropdown>
+          <button class="nav-text" clrDropdownTrigger>
+            {{ user?.attributes.email }}
+            <cds-icon shape="angle" direction="down"></cds-icon>
+          </button>
+          <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+            <a routerLink="edit" clrDropdownItem>Edit</a>
+            <button (click)="onLogoutClick()" clrDropdownItem>Log out</button>
+          </clr-dropdown-menu>
+        </clr-dropdown>
+      </ng-template>
+    </div>
+  </clr-header>
 
-      <nav class="subnav" [clr-nav-level]="1">
-        <ul class="nav">
-          <li class="nav-item" *ngFor="let type of entryTypes | async">
-            <a class="nav-link" href="#{{ type }}">{{ type | titlecase }}</a>
-          </li>
-        </ul>
-      </nav>
-      <div class="content-container">
-        <div class="content-area">
-          {{ user | json }}
-          <!-- Card Style Data -->
-          <div
-            class="clr-row separation"
-            [id]="type"
-            *ngFor="let type of entryTypes | async"
-          >
-            <ng-container *ngIf="entriesByType$ | async as entriesByType">
-              <app-card
-                class="clr-col-lg-8 clr-offset-lg-2 clr-col-12"
-                [resumeEntries]="entriesByType[type]"
-              ></app-card>
-            </ng-container>
-          </div>
-        </div>
-      </div>
-    </clr-main-container>
-  </ng-template>
-</amplify-authenticator>
+  <router-outlet></router-outlet>
+</clr-main-container>

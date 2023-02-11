@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
 import { DefaultService, UserData } from './api/v1';
+import { ResumeEntriesByType } from './models';
 
 
 /**
@@ -15,6 +17,14 @@ export class ResumeDataService {
   constructor(private service: DefaultService) { }
 
   public getEntriesByUser(username: string): Observable<UserData> {
-    return this.service.getEntriesByUser(username);
+    return this.service.getEntriesByUser(username).pipe(
+      shareReplay(1)
+    );
+  }
+
+  public getEntriesByType(username: string): Observable<ResumeEntriesByType> {
+    return this.getEntriesByUser(username).pipe(
+      map((resp) => ResumeEntriesByType.fromResumeEntries(resp.Items))
+    );
   }
 }

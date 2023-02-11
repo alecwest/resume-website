@@ -1,10 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ResumeEntry } from '../api/v1';
 
 @Component({
+  standalone: true,
   selector: 'app-bio',
   templateUrl: './bio.component.html',
-  styleUrls: ['./bio.component.scss']
+  styleUrls: ['./bio.component.scss'],
+  imports: [
+    CommonModule
+  ]
 })
 export class BioComponent implements OnChanges {
 

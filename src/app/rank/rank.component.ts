@@ -1,10 +1,13 @@
-import { Component, Input } from '@angular/core';
-import { ResumeEntry } from '../api/v1';
+import { CommonModule, TitleCasePipe } from "@angular/common";
+import { Component, Input } from "@angular/core";
+import { ResumeEntry } from "../api/v1";
 
 @Component({
-  selector: 'app-rank',
-  templateUrl: './rank.component.html',
-  styleUrls: ['./rank.component.scss']
+  standalone: true,
+  selector: "app-rank",
+  templateUrl: "./rank.component.html",
+  styleUrls: ["./rank.component.scss"],
+  imports: [TitleCasePipe, CommonModule],
 })
 export class RankComponent {
   @Input()
