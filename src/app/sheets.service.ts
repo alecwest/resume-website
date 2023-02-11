@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SheetRange } from './models';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 const KEY = 'AIzaSyCeL3mq1JY9OI6iuMxT-TN2334OM1YwSTo';
 
@@ -56,7 +56,7 @@ export class SheetsService {
     function parseMetadata(sheet: Sheet): Metadata {
       const headers = sheet.values[0];
       const values = sheet.values.slice(1);
-      const metadataKeyValue: any = {};
+      const metadataKeyValue: { [key: string]: string } = {};
       headers.forEach((header, index) => {
         if (header.includes('metadata')) {
           const metadataKey = header.split(':')[1];
@@ -102,7 +102,7 @@ export class SheetsService {
     );
   }
 
-  getSpreadsheet(spreadsheetId: string): Observable<any> {
+  getSpreadsheet(spreadsheetId: string): Observable<object> {
     const url = `${SHEETS_URL_PREFIX}/${spreadsheetId}?key=${KEY}&includeGridData=true`;
     return this.http.get(url);
   }

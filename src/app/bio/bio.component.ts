@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { ResumeEntry } from '../api/v1';
 
 @Component({
@@ -22,7 +22,7 @@ export class BioComponent implements OnChanges {
 
   headshot: string;
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     if (this.bio) {
       this.name = this.bio.title;
       this.intro = this.bio.details.description;

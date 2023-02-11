@@ -3,7 +3,7 @@ import { ResumeEntriesByType } from "./models";
 import { ResumeDataService } from "./resume-data.service";
 import { ResumeEntry } from "./api/v1";
 import { Observable, Subject } from "rxjs";
-import { filter, map, shareReplay, takeUntil, tap } from "rxjs/operators";
+import { filter, map, takeUntil } from "rxjs/operators";
 import { AuthenticatorService } from "@aws-amplify/ui-angular";
 
 @Component({

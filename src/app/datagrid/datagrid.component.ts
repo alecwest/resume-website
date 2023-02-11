@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { ClarityModule } from '@clr/angular';
 import { ResumeEntry } from '../api/v1';
 import { TextComponent } from '../text/text.component';
 import { ViewFriendlyPipe } from '../view-friendly.pipe';
 
 interface FlattenedEntry extends ResumeEntry {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -35,15 +35,15 @@ export class DatagridComponent implements OnChanges {
 
   protected flattenedEntries: FlattenedEntry[];
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     this.flattenedEntries = this.resumeEntries.map((entry) => {
       const flattened = { ...entry, ...entry.details };
       delete flattened.details;
       return flattened;
     })
     .sort((a, b) => {
-      const aParsed = Date.parse(a.endDate.replace(/[\\\/]/g, '-'));
-      const bParsed = Date.parse(b.endDate.replace(/[\\\/]/g, '-'));
+      const aParsed = Date.parse(a.endDate.replace(/[\\/]/g, '-'));
+      const bParsed = Date.parse(b.endDate.replace(/[\\/]/g, '-'));
       return a.endDate === 'present' ? -1 : bParsed - aParsed;
     });
     if (this.flattenedEntries.length > 0) {
