@@ -6,12 +6,14 @@ import { AppComponent } from "./app.component";
 import { provideHttpClient } from "@angular/common/http";
 import { ClarityModule } from "@clr/angular";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { ApiModule } from "./api/v1";
+import { ApiModule, Configuration } from "./api/v1";
 import { CdsModule } from "@cds/angular";
 import { AmplifyAuthenticatorModule } from "@aws-amplify/ui-angular";
 import { LoginComponent } from "./login/login.component";
 import { EditComponent } from "./edit/edit.component";
 import { ProfileComponent } from "./profile/profile.component";
+
+import { environment } from "../environments/environment";
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,7 +22,12 @@ import { ProfileComponent } from "./profile/profile.component";
     AppRoutingModule,
     ClarityModule,
     BrowserAnimationsModule,
-    ApiModule,
+    ApiModule.forRoot(
+      () =>
+        new Configuration({
+          credentials: { api_key: environment?.apiGateway?.apiKey },
+        })
+    ),
     CdsModule,
     AmplifyAuthenticatorModule,
     LoginComponent,

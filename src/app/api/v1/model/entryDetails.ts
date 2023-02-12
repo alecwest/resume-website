@@ -44,8 +44,10 @@ export interface EntryDetails {
      * For bio type: a list of social media objects
      */
     social?: Array<Social>;
-    introduction?: Array<string>;
     subtitle?: string;
+    /**
+     * A list of image urls associated with the entry
+     */
     images?: Array<string>;
 }
 

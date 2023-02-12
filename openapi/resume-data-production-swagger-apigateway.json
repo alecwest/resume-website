@@ -32,10 +32,12 @@
             }
           }
         },
+        "security" : [ {
+          "api_key" : [ ]
+        } ],
         "x-amazon-apigateway-integration" : {
-          "type" : "aws_proxy",
-          "httpMethod" : "POST",
           "uri" : "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:810191593673:function:resume-data-api-gateway-dynamodb/invocations",
+          "httpMethod" : "POST",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -45,7 +47,8 @@
             }
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT"
+          "contentHandling" : "CONVERT_TO_TEXT",
+          "type" : "aws_proxy"
         }
       },
       "options" : {
@@ -77,7 +80,6 @@
           }
         },
         "x-amazon-apigateway-integration" : {
-          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -91,9 +93,17 @@
           "requestTemplates" : {
             "application/json" : "{\"statusCode\": 200}"
           },
-          "passthroughBehavior" : "when_no_match"
+          "passthroughBehavior" : "when_no_match",
+          "type" : "mock"
         }
       }
+    }
+  },
+  "securityDefinitions" : {
+    "api_key" : {
+      "type" : "apiKey",
+      "name" : "x-api-key",
+      "in" : "header"
     }
   },
   "definitions" : {
@@ -173,20 +183,14 @@
                       "required" : [ "name", "url" ]
                     }
                   },
-                  "introduction" : {
-                    "type" : "array",
-                    "title" : "User introduction",
-                    "items" : {
-                      "type" : "string"
-                    }
-                  },
                   "subtitle" : {
                     "type" : "string",
                     "title" : "User subtitle/subheading"
                   },
                   "images" : {
                     "type" : "array",
-                    "title" : "Image urls associated with the entry",
+                    "description" : "A list of image urls associated with the entry",
+                    "title" : "Image urls",
                     "items" : {
                       "type" : "string"
                     }
@@ -244,14 +248,14 @@
     }
   },
   "x-amazon-apigateway-gateway-responses" : {
-    "DEFAULT_5XX" : {
+    "DEFAULT_4XX" : {
       "responseParameters" : {
         "gatewayresponse.header.Access-Control-Allow-Methods" : "'GET,OPTIONS'",
         "gatewayresponse.header.Access-Control-Allow-Origin" : "'*'",
         "gatewayresponse.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
       }
     },
-    "DEFAULT_4XX" : {
+    "DEFAULT_5XX" : {
       "responseParameters" : {
         "gatewayresponse.header.Access-Control-Allow-Methods" : "'GET,OPTIONS'",
         "gatewayresponse.header.Access-Control-Allow-Origin" : "'*'",

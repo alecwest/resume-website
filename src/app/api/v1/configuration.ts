@@ -86,6 +86,17 @@ export class Configuration {
         else {
             this.credentials = {};
         }
+
+        // init default api_key credential
+        if (!this.credentials['api_key']) {
+            this.credentials['api_key'] = () => {
+                if (this.apiKeys === null || this.apiKeys === undefined) {
+                    return undefined;
+                } else {
+                    return this.apiKeys['api_key'] || this.apiKeys['x-api-key'];
+                }
+            };
+        }
     }
 
     /**
