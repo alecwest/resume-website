@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { DefaultService, UserData } from './api/v1';
+import { DefaultService, ResumeEntry, UserData } from './api/v1';
 import { ResumeEntriesByType } from './models';
 
 
@@ -26,5 +26,9 @@ export class ResumeDataService {
     return this.getEntriesByUser(username).pipe(
       map((resp) => ResumeEntriesByType.fromResumeEntries(resp.Items))
     );
+  }
+
+  public putEntry(username: string, entry: ResumeEntry): Observable<object> {
+    return this.service.putEntry(username, entry);
   }
 }

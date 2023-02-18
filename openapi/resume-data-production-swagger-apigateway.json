@@ -36,6 +36,7 @@
           "api_key" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
           "uri" : "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:810191593673:function:resume-data-api-gateway-dynamodb/invocations",
           "httpMethod" : "POST",
           "responses" : {
@@ -47,8 +48,48 @@
             }
           },
           "passthroughBehavior" : "when_no_match",
-          "contentHandling" : "CONVERT_TO_TEXT",
-          "type" : "aws_proxy"
+          "contentHandling" : "CONVERT_TO_TEXT"
+        }
+      },
+      "post" : {
+        "operationId" : "putEntry",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "user",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "ResumeEntry",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ResumeEntry"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "security" : [ {
+          "api_key" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "type" : "aws_proxy",
+          "uri" : "arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:810191593673:function:resume-data-api-gateway-dynamodb/invocations",
+          "httpMethod" : "POST",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "contentHandling" : "CONVERT_TO_TEXT"
         }
       },
       "options" : {
@@ -80,6 +121,7 @@
           }
         },
         "x-amazon-apigateway-integration" : {
+          "type" : "mock",
           "responses" : {
             "default" : {
               "statusCode" : "200",
@@ -93,8 +135,7 @@
           "requestTemplates" : {
             "application/json" : "{\"statusCode\": 200}"
           },
-          "passthroughBehavior" : "when_no_match",
-          "type" : "mock"
+          "passthroughBehavior" : "when_no_match"
         }
       }
     }
@@ -119,107 +160,7 @@
           "type" : "array",
           "title" : "Resume Entries",
           "items" : {
-            "type" : "object",
-            "title" : "Resume Entry",
-            "properties" : {
-              "user" : {
-                "type" : "string",
-                "description" : "The username the entry is tied to"
-              },
-              "details" : {
-                "type" : "object",
-                "description" : "Details about the entry. Varies by entry type",
-                "title" : "Entry Details",
-                "properties" : {
-                  "degree" : {
-                    "type" : "string",
-                    "description" : "For education type: the degree received"
-                  },
-                  "description" : {
-                    "type" : "array",
-                    "description" : "Supplemental information about the entry. Each item represents a line break / paragraph.",
-                    "items" : {
-                      "type" : "string"
-                    }
-                  },
-                  "notableClasses" : {
-                    "type" : "array",
-                    "description" : "For education type: the notable-classes taken",
-                    "items" : {
-                      "type" : "string"
-                    }
-                  },
-                  "position" : {
-                    "type" : "string",
-                    "description" : "For employment type: the position in the job"
-                  },
-                  "proficiency" : {
-                    "type" : "integer",
-                    "description" : "For skillhard type: a ranking from 1-5 of experience with the skill",
-                    "minimum" : 1.0,
-                    "maximum" : 5.0
-                  },
-                  "projectSource" : {
-                    "type" : "string",
-                    "description" : "For project type: a url to a project"
-                  },
-                  "social" : {
-                    "type" : "array",
-                    "description" : "For bio type: a list of social media objects",
-                    "title" : "Social List",
-                    "items" : {
-                      "type" : "object",
-                      "title" : "Social",
-                      "properties" : {
-                        "name" : {
-                          "type" : "string",
-                          "description" : "The name of the social site"
-                        },
-                        "url" : {
-                          "type" : "string",
-                          "description" : "The url of the social site"
-                        }
-                      },
-                      "required" : [ "name", "url" ]
-                    }
-                  },
-                  "subtitle" : {
-                    "type" : "string",
-                    "title" : "User subtitle/subheading"
-                  },
-                  "images" : {
-                    "type" : "array",
-                    "description" : "A list of image urls associated with the entry",
-                    "title" : "Image urls",
-                    "items" : {
-                      "type" : "string"
-                    }
-                  }
-                }
-              },
-              "id" : {
-                "type" : "string",
-                "title" : "Entry ID"
-              },
-              "startDate" : {
-                "type" : "string",
-                "description" : "Approximate date the event first began"
-              },
-              "endDate" : {
-                "type" : "string",
-                "description" : "Approximate date the event ended, or 'present'"
-              },
-              "title" : {
-                "type" : "string",
-                "title" : "Entry Title"
-              },
-              "type" : {
-                "type" : "string",
-                "title" : "Entry Type",
-                "enum" : [ "education", "employment", "skillhard", "project", "bio" ]
-              }
-            },
-            "required" : [ "details", "endDate", "id", "startDate", "title", "type", "user" ]
+            "$ref" : "#/definitions/ResumeEntry"
           }
         },
         "Count" : {
@@ -245,17 +186,120 @@
         }
       },
       "title" : "Get Data Response"
+    },
+    "ResumeEntry" : {
+      "type" : "object",
+      "required" : [ "details", "endDate", "id", "startDate", "title", "type", "user" ],
+      "properties" : {
+        "user" : {
+          "type" : "string",
+          "description" : "The username the entry is tied to"
+        },
+        "details" : {
+          "type" : "object",
+          "description" : "Details about the entry. Varies by entry type",
+          "title" : "Entry Details",
+          "properties" : {
+            "degree" : {
+              "type" : "string",
+              "description" : "For education type: the degree received"
+            },
+            "description" : {
+              "type" : "array",
+              "description" : "Supplemental information about the entry. Each item represents a line break / paragraph.",
+              "items" : {
+                "type" : "string"
+              }
+            },
+            "notableClasses" : {
+              "type" : "array",
+              "description" : "For education type: the notable-classes taken",
+              "items" : {
+                "type" : "string"
+              }
+            },
+            "position" : {
+              "type" : "string",
+              "description" : "For employment type: the position in the job"
+            },
+            "proficiency" : {
+              "type" : "integer",
+              "description" : "For skillhard type: a ranking from 1-5 of experience with the skill",
+              "minimum" : 1.0,
+              "maximum" : 5.0
+            },
+            "projectSource" : {
+              "type" : "string",
+              "description" : "For project type: a url to a project"
+            },
+            "social" : {
+              "type" : "array",
+              "description" : "For bio type: a list of social media objects",
+              "title" : "Social List",
+              "items" : {
+                "type" : "object",
+                "title" : "Social",
+                "properties" : {
+                  "name" : {
+                    "type" : "string",
+                    "description" : "The name of the social site"
+                  },
+                  "url" : {
+                    "type" : "string",
+                    "description" : "The url of the social site"
+                  }
+                },
+                "required" : [ "name", "url" ]
+              }
+            },
+            "subtitle" : {
+              "type" : "string",
+              "title" : "User subtitle/subheading"
+            },
+            "images" : {
+              "type" : "array",
+              "description" : "A list of image urls associated with the entry",
+              "title" : "Image urls",
+              "items" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "id" : {
+          "type" : "string",
+          "title" : "Entry ID"
+        },
+        "startDate" : {
+          "type" : "string",
+          "description" : "Approximate date the event first began"
+        },
+        "endDate" : {
+          "type" : "string",
+          "description" : "Approximate date the event ended, or 'present'"
+        },
+        "title" : {
+          "type" : "string",
+          "title" : "Entry Title"
+        },
+        "type" : {
+          "type" : "string",
+          "title" : "Entry Type",
+          "enum" : [ "education", "employment", "skillhard", "project", "bio" ]
+        }
+      },
+      "title" : "Resume Entry"
     }
   },
   "x-amazon-apigateway-gateway-responses" : {
-    "DEFAULT_4XX" : {
+    "DEFAULT_5XX" : {
       "responseParameters" : {
         "gatewayresponse.header.Access-Control-Allow-Methods" : "'GET,OPTIONS'",
         "gatewayresponse.header.Access-Control-Allow-Origin" : "'*'",
         "gatewayresponse.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
       }
     },
-    "DEFAULT_5XX" : {
+    "DEFAULT_4XX" : {
       "responseParameters" : {
         "gatewayresponse.header.Access-Control-Allow-Methods" : "'GET,OPTIONS'",
         "gatewayresponse.header.Access-Control-Allow-Origin" : "'*'",
