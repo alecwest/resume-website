@@ -5,24 +5,30 @@
     </clr-dg-column>
   </ng-container>
 
-  <clr-dg-row *clrDgItems="let row of flattenedEntries" [clrDgItem]="row">
+  <clr-dg-row *clrDgItems="let row of resumeEntries" [clrDgItem]="row">
     <clr-dg-cell *ngFor="let columnName of columnNames">
-      <app-text [context]="row[columnName]"></app-text>
+      <app-text [context]="getItemFromEntry(row, columnName)"></app-text>
     </clr-dg-cell>
 
-    <clr-dg-row-detail *clrIfExpanded>
-      <ng-container *ngFor="let detailKey of detailColumns">
-        <div class="card">
-          <h3 class="card-header">{{ detailKey | viewFriendly | titlecase }}</h3>
-          <div class="card-block">
-            <ul class="list">
-              <li *ngFor="let line of row[detailKey]">
-                <app-text [context]="line"></app-text>
-              </li>
-            </ul>
+    <clr-dg-row-detail *clrIfExpanded class="expanded-row">
+      <ng-template #showDetail>
+        <ng-container *ngFor="let detailKey of detailColumns">
+          <div class="card">
+            <h3 class="card-header">{{ detailKey | viewFriendly | titlecase }}</h3>
+            <div class="card-block">
+              <ul class="list">
+                <li *ngFor="let line of getItemFromEntry(row, detailKey)">
+                  <app-text [context]="line"></app-text>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </ng-container>
+        </ng-container>
+      </ng-template>
+      <form clrForm *ngIf="editing; else showDetail" (ngSubmit)="onSubmit(editableFormControl)" style="width: 100%" #datagridEditForm="ngForm">
+        <textarea clrTextArea [formControl]="editableFormControl" name="entry" style="width: 100%" rows="8"></textarea>
+      </form>
+      <app-editable (editCancelClick)="toggleEdit(row)" [editForm]="datagridEditForm" [savable]="true"></app-editable>
     </clr-dg-row-detail>
   </clr-dg-row>
 </clr-datagrid>

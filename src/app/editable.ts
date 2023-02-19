@@ -1,7 +1,7 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable, of } from "rxjs";
-import { catchError, map, tap } from "rxjs/operators";
+import { catchError, map } from "rxjs/operators";
 import { ResumeEntry } from "./api/v1";
 import { ResumeDataService } from "./resume-data.service";
 
@@ -47,9 +47,7 @@ export abstract class Editable {
    * Sends the entry in its current state to the backend for updating.
    */
   private submitEdit(entry: ResumeEntry): Observable<boolean> {
-    console.log(entry);
     return this.resumeDataService.putEntry(entry.user, entry).pipe(
-      tap((a) => console.log(a)),
       map(() => true),
       catchError((err) => {
         console.error(err);

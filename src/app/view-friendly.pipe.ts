@@ -10,10 +10,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class ViewFriendlyPipe implements PipeTransform {
   transform(value: string): string {
-    const realColumnNameStart = value.indexOf('(');
-    const realColumnNameEnd = value.indexOf(')');
-    if (realColumnNameStart > -1 && realColumnNameEnd > -1) {
-      return value.substring(realColumnNameStart + 1, realColumnNameEnd);
+    const columnNameSplit = value.split(".");
+    if (columnNameSplit.length > 1) {
+      value = columnNameSplit[columnNameSplit.length - 1];
     }
     return this.camelCaseTransform(this.kebabCaseTransform(value));
   }

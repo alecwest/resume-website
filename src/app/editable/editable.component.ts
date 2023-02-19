@@ -3,11 +3,12 @@ import { CommonModule } from "@angular/common";
 import { CdsIconModule } from "@cds/angular";
 import { AuthenticatorService } from "@aws-amplify/ui-angular";
 import { FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
+import { SavableComponent } from '../savable/savable.component';
 
 @Component({
   selector: "app-editable",
   standalone: true,
-  imports: [CommonModule, CdsIconModule, ReactiveFormsModule],
+  imports: [CommonModule, CdsIconModule, ReactiveFormsModule, SavableComponent],
   template: `
     <ng-template #editButton>
       <button
@@ -20,27 +21,9 @@ import { FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
         Edit
       </button>
     </ng-template>
-    <ng-container *ngIf="editForm; else editButton">
-      <button
-        class="btn btn-link"
-        style="margin: 0"
-        (click)="onEditCancelClick()"
-      >
-        <cds-icon shape="ban"></cds-icon>
-        Cancel
-      </button>
+    <ng-container *ngIf="editForm && savable; else editButton">
+      <app-savable [saveForm]="editForm" (cancelClick)="onEditCancelClick()"></app-savable>
     </ng-container>
-
-    <button
-      type="submit"
-      class="btn btn-primary"
-      style="margin: auto 1em"
-      *ngIf="editForm"
-      (click)="onSaveClick()"
-      [disabled]="!editForm?.form.valid"
-    >
-      Save
-    </button>
   `,
   styles: [],
 })
@@ -50,6 +33,12 @@ export class EditableComponent {
 
   @Input()
   editForm: FormGroupDirective;
+
+  /**
+   * When true, will render save button(s) in place of edit once a form is present.
+   */
+  @Input()
+  savable: boolean;
 
   // TODO this could be a directive
   protected get authenticated() {
