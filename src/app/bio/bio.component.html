@@ -1,13 +1,21 @@
 <div class="clr-row">
-  <div class="clr-col-4 headshot">
-    <img
+  <form clrForm (ngSubmit)="onSubmit(editableFormControl)" *ngIf="editing; else showBio" style="width: 100%" #bioEditForm="ngForm">
+    <textarea clrTextArea [formControl]="editableFormControl" name="bio" style="width: 100%" rows="8"></textarea>
+  </form>
+  <ng-template #showBio>
+    <div class="clr-col-4 headshot">
+      <img
       class="headshot-image"
       [src]="headshot"
       />
-  </div>
-  <div class="clr-col-8 bio">
-    <p *ngFor="let line of intro">
-      {{ line }}
-    </p>
-  </div>
+    </div>
+    <div class="clr-col-8 bio">
+      <p *ngFor="let line of intro">
+        {{ line }}
+      </p>
+    </div>
+  </ng-template>
+</div>
+<div class="clr-row">
+  <app-editable (editCancelClick)="toggleEdit(bio)" [editForm]="bioEditForm"></app-editable>
 </div>

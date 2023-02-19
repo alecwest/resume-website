@@ -10,12 +10,7 @@ import { RankComponent } from "../rank/rank.component";
   selector: "app-card",
   templateUrl: "./card.component.html",
   styleUrls: ["./card.component.scss"],
-  imports: [
-    BioComponent,
-    DatagridComponent,
-    RankComponent,
-    CommonModule
-  ],
+  imports: [BioComponent, DatagridComponent, RankComponent, CommonModule],
 })
 export class CardComponent {
   /**
