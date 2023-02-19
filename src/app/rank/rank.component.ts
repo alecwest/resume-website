@@ -1,17 +1,32 @@
 import { CommonModule, TitleCasePipe } from "@angular/common";
-import { Component, Input } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, ViewChild } from "@angular/core";
+import { FormControl, FormGroupDirective, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { ResumeEntry } from "../api/v1";
+import { Editable } from "../editable";
+import { EditableComponent } from "../editable/editable.component";
+import { ResumeDataService } from '../resume-data.service';
+import { SavableComponent } from '../savable/savable.component';
 
 @Component({
   standalone: true,
   selector: "app-rank",
   templateUrl: "./rank.component.html",
   styleUrls: ["./rank.component.scss"],
-  imports: [TitleCasePipe, CommonModule],
+  imports: [TitleCasePipe, CommonModule, EditableComponent, SavableComponent, FormsModule, ReactiveFormsModule],
 })
-export class RankComponent {
+export class RankComponent extends Editable {
   @Input()
   resumeEntries: ResumeEntry[];
+
+  @ViewChild('rankEditForm', { static: false })
+  rankEditForm: FormGroupDirective;
+
+  constructor(
+    resumeDataService: ResumeDataService,
+    changeDetectorRef: ChangeDetectorRef
+  ) {
+    super(resumeDataService, changeDetectorRef);
+  }
 
   protected sorted(resumeEntries: ResumeEntry[]): ResumeEntry[] {
     return resumeEntries.sort((a, b) => {
@@ -22,5 +37,10 @@ export class RankComponent {
         return skillSort;
       }
     });
+  }
+
+  afterSubmit(updatedEntry: ResumeEntry): void {
+    const oldEntryIndex = this.resumeEntries.findIndex(oldEntry => oldEntry.id === updatedEntry.id);
+    this.resumeEntries[oldEntryIndex] = updatedEntry;
   }
 }

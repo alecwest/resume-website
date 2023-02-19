@@ -21,7 +21,7 @@ export abstract class Editable {
    * what was just submitted. Only called when submission is successful.
    * @param entry the entry successfully sent to the backend
    */
-  abstract afterSubmit(entry: ResumeEntry): void;
+  abstract afterSubmit(updatedEntry: ResumeEntry): void;
 
   /**
    * Function intended to be called when an edit is requested or cancelled.

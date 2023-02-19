@@ -1,15 +1,22 @@
 <div class="clr-row">
-  <ng-container *ngFor="let row of sorted(resumeEntries); let i = index">
-    <div class="clr-col icon-grid-content">
-      <h4>{{ row.title | titlecase }}</h4>
+  <form clrForm (ngSubmit)="onSubmit(editableFormControl)" *ngIf="editing; else showRank" style="width: 100%" #rankEditForm="ngForm">
+    <textarea clrTextArea [formControl]="editableFormControl" name="entry" style="width: 100%" rows="8"></textarea>
+  </form>
+  <ng-template #showRank>
+    <ng-container *ngFor="let row of sorted(resumeEntries); let i = index">
+      <div class="clr-col icon-grid-content">
+        <h4>{{ row.title | titlecase }}</h4>
 
-      <div class="progress-block">
-        <div class="progress">
-            <progress value="{{row.details.proficiency}}" max="5" [attr.displayval]="row.details.proficiency + '/5'"></progress>
+        <div class="progress-block">
+          <div class="progress">
+              <progress value="{{row.details.proficiency}}" max="5" [attr.displayval]="row.details.proficiency + '/5'"></progress>
+          </div>
+          <span>{{row.details.proficiency}}/5</span>
         </div>
-        <span>{{row.details.proficiency}}/5</span>
-    </div>
-    </div>
-    <div class="clr-break-row" *ngIf="i % 3 === 2"></div>
-  </ng-container>
+        <app-editable [editForm]="rankEditForm" (editCancelClick)="toggleEdit(row)"></app-editable>
+      </div>
+      <div class="clr-break-row" *ngIf="i % 3 === 2"></div>
+    </ng-container>
+  </ng-template>
+  <app-savable *ngIf="editing" (cancelClick)="toggleEdit(null)" [saveForm]="rankEditForm"></app-savable>
 </div>
