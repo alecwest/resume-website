@@ -14,6 +14,6 @@ export class TextComponent {
   @Input() context: string; // TODO use ng-content for this instead?
 
   isUrl(element: string): boolean {
-    return element.includes(".com");
+    return element?.includes(".com");
   }
 }

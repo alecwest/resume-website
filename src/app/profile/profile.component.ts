@@ -8,6 +8,7 @@ import { map, takeUntil } from "rxjs/operators";
 import { ResumeEntry } from '../api/v1';
 import { CardComponent } from "../card/card.component";
 import { ResumeEntriesByType } from "../models";
+import { NewEntryComponent } from '../new-entry/new-entry.component';
 import { ResumeDataService } from "../resume-data.service";
 
 @Component({
@@ -15,7 +16,7 @@ import { ResumeDataService } from "../resume-data.service";
   selector: "app-profile",
   templateUrl: "./profile.component.html",
   styleUrls: ["./profile.component.scss"],
-  imports: [CdsModule, CommonModule, ClarityModule, CardComponent],
+  imports: [CdsModule, CommonModule, ClarityModule, CardComponent, NewEntryComponent],
 })
 export class ProfileComponent implements OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
@@ -40,10 +41,15 @@ export class ProfileComponent implements OnDestroy {
     return this.authenticator.user;
   }
 
+  get authenticated(): boolean {
+    return this.authenticator.authStatus === 'authenticated';
+  }
+
   constructor(
     private resumeDataService: ResumeDataService,
     private authenticator: AuthenticatorService
   ) {}
+
 
   ngOnDestroy(): void {
     this.destroy$.next(true);

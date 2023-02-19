@@ -1,0 +1,14 @@
+<div class="card center-vertical">
+  <div class="card-header">
+    New Entry
+  </div>
+  <div class="card-block">
+    <div class="card-text">
+      <form clrForm (ngSubmit)="onSubmit(editableFormControl)" style="width: 100%" #newEntryForm="ngForm">
+        <textarea clrTextArea [formControl]="editableFormControl" name="entry" style="width: 100%" rows="8"></textarea>
+      </form>
+
+      <app-editable (editCancelClick)="toggleEdit(cleanEntry)" [editForm]="newEntryForm" [savable]="true"></app-editable>
+    </div>
+  </div>
+</div>
