@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AuthenticatorService } from '@aws-amplify/ui-angular';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { DefaultService, ResumeEntry, UserData } from './api/v1';
@@ -14,7 +15,7 @@ import { ResumeEntriesByType } from './models';
 })
 export class ResumeDataService {
 
-  constructor(private service: DefaultService) { }
+  constructor(private service: DefaultService, private authenticator: AuthenticatorService) { }
 
   public getEntriesByUser(username: string): Observable<UserData> {
     return this.service.getEntriesByUser(username).pipe(
@@ -29,6 +30,14 @@ export class ResumeDataService {
   }
 
   public putEntry(username: string, entry: ResumeEntry): Observable<object> {
+    if (this.authenticator.user) {
+      this.setToken(this.authenticator.user.getSignInUserSession().getIdToken().getJwtToken());
+    }
+    console.log(this.service.configuration);
     return this.service.putEntry(username, entry);
+  }
+
+  private setToken(token: string): void {
+    this.service.configuration.credentials['resume-website-api-gateway-authorizer'] = token;
   }
 }

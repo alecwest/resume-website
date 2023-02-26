@@ -97,6 +97,17 @@ export class Configuration {
                 }
             };
         }
+
+        // init default resume-website-api-gateway-authorizer credential
+        if (!this.credentials['resume-website-api-gateway-authorizer']) {
+            this.credentials['resume-website-api-gateway-authorizer'] = () => {
+                if (this.apiKeys === null || this.apiKeys === undefined) {
+                    return undefined;
+                } else {
+                    return this.apiKeys['resume-website-api-gateway-authorizer'] || this.apiKeys['Authorization'];
+                }
+            };
+        }
     }
 
     /**

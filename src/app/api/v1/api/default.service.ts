@@ -183,6 +183,12 @@ export class DefaultService {
             localVarHeaders = localVarHeaders.set('x-api-key', localVarCredential);
         }
 
+        // authentication (resume-website-api-gateway-authorizer) required
+        localVarCredential = this.configuration.lookupCredential('resume-website-api-gateway-authorizer');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', localVarCredential);
+        }
+
         let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header

@@ -77,6 +77,8 @@
           }
         },
         "security" : [ {
+          "resume-website-api-gateway-authorizer" : [ ]
+        }, {
           "api_key" : [ ]
         } ],
         "x-amazon-apigateway-integration" : {
@@ -145,6 +147,16 @@
       "type" : "apiKey",
       "name" : "x-api-key",
       "in" : "header"
+    },
+    "resume-website-api-gateway-authorizer" : {
+      "type" : "apiKey",
+      "name" : "Authorization",
+      "in" : "header",
+      "x-amazon-apigateway-authtype" : "cognito_user_pools",
+      "x-amazon-apigateway-authorizer" : {
+        "type" : "cognito_user_pools",
+        "providerARNs" : [ "arn:aws:cognito-idp:us-east-2:810191593673:userpool/us-east-2_bEfRGpFPQ" ]
+      }
     }
   },
   "definitions" : {
@@ -292,14 +304,14 @@
     }
   },
   "x-amazon-apigateway-gateway-responses" : {
-    "DEFAULT_5XX" : {
+    "DEFAULT_4XX" : {
       "responseParameters" : {
         "gatewayresponse.header.Access-Control-Allow-Methods" : "'GET,OPTIONS'",
         "gatewayresponse.header.Access-Control-Allow-Origin" : "'*'",
         "gatewayresponse.header.Access-Control-Allow-Headers" : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
       }
     },
-    "DEFAULT_4XX" : {
+    "DEFAULT_5XX" : {
       "responseParameters" : {
         "gatewayresponse.header.Access-Control-Allow-Methods" : "'GET,OPTIONS'",
         "gatewayresponse.header.Access-Control-Allow-Origin" : "'*'",
