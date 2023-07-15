@@ -1,28 +1,32 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { EditableComponent } from '../editable/editable.component';
-import { Editable } from '../editable';
-import { ResumeEntry } from '../api/v1';
-import { FormGroupDirective, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ResumeDataService } from '../resume-data.service';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { EditableComponent } from "../editable/editable.component";
+import { Editable } from "../editable";
+import { ResumeEntry } from "../api/v1";
+import {
+  FormGroupDirective,
+  FormsModule,
+  ReactiveFormsModule,
+} from "@angular/forms";
+import { ResumeDataService } from "../resume-data.service";
 
 @Component({
-  selector: 'app-new-entry',
+  selector: "app-new-entry",
   standalone: true,
   imports: [CommonModule, EditableComponent, FormsModule, ReactiveFormsModule],
-  templateUrl: './new-entry.component.html',
-  styleUrls: ['./new-entry.component.scss']
+  templateUrl: "./new-entry.component.html",
+  styleUrls: ["./new-entry.component.scss"],
 })
 export class NewEntryComponent extends Editable implements OnInit {
-  @ViewChild('newEntry', { static: false })
+  @ViewChild("newEntry", { static: false })
   newEntry: FormGroupDirective;
 
   get cleanEntry(): ResumeEntry {
     return {
-      id: (new Date()).getTime().toString(),
+      id: new Date().getTime().toString(),
       title: "",
       type: "" as ResumeEntry.TypeEnum,
-      user: 'alecwest',
+      user: "alecwest",
       details: {
         degree: "",
         description: [],
@@ -32,11 +36,11 @@ export class NewEntryComponent extends Editable implements OnInit {
         proficiency: 0,
         projectSource: "",
         social: [],
-        subtitle: ""
+        subtitle: "",
       },
       endDate: "present",
-      startDate: "1/1/2016"
-    }
+      startDate: "1/1/2016",
+    };
   }
 
   constructor(
@@ -54,21 +58,3 @@ export class NewEntryComponent extends Editable implements OnInit {
     this.toggleEdit(updatedEntry);
   }
 }
-
-/**
- *
- {
-  "id": "1676842337741",
-  "title": "Something Fun",
-  "type": "projects",
-  "user": "alecwest",
-  "details": {
-    "description": [
-"I'm just here to have a good time"
-],
-    "projectSource": "available upon reeeeeeeeeeeeeeeequest"
-  },
-  "endDate": "present",
-  "startDate": "1/1/2010"
-}
- */

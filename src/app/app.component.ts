@@ -4,7 +4,7 @@ import { ResumeDataService } from "./resume-data.service";
 import { ResumeEntry } from "./api/v1";
 import { Observable, Subject } from "rxjs";
 import { filter, map, takeUntil } from "rxjs/operators";
-import { AuthenticatorService } from "@aws-amplify/ui-angular";
+import { AuthenticatorService } from "./authenticator.service";
 
 @Component({
   selector: "app-root",
@@ -19,11 +19,9 @@ export class AppComponent implements OnDestroy {
 
   destroy$: Subject<boolean> = new Subject<boolean>();
 
-  entriesByType$: Observable<
-    ResumeEntriesByType
-  > = this.resumeDataService.getEntriesByType("alecwest").pipe(
-    takeUntil(this.destroy$)
-  );
+  entriesByType$: Observable<ResumeEntriesByType> = this.resumeDataService
+    .getEntriesByType("alecwest")
+    .pipe(takeUntil(this.destroy$));
 
   bio: Observable<ResumeEntry> = this.entriesByType$.pipe(
     filter((entries) => entries.bio.length > 0),
@@ -47,15 +45,10 @@ export class AppComponent implements OnDestroy {
   }
 
   isAuthenticated(): boolean {
-    return this.authenticator.authStatus === 'authenticated';
-  }
-
-  onLoginClick() {
-    console.log('login');
-
+    return this.authenticator.authenticated;
   }
 
   onLogoutClick() {
-    this.authenticator.signOut();
+    this.authenticator.authenticator.signOut();
   }
 }

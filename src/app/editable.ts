@@ -1,5 +1,5 @@
-import { ChangeDetectorRef } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { ChangeDetectorRef } from "@angular/core";
+import { FormControl } from "@angular/forms";
 import { Observable, of } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 import { ResumeEntry } from "./api/v1";
@@ -9,12 +9,14 @@ import { ResumeDataService } from "./resume-data.service";
  * Intended to be extended by the various components that are used to display entries to help with editing.
  */
 export abstract class Editable {
-
   editableFormControl: FormControl;
 
   editing: boolean;
 
-  constructor(private resumeDataService: ResumeDataService, private changeDetectorRef: ChangeDetectorRef) {}
+  constructor(
+    private resumeDataService: ResumeDataService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   /**
    * Implemented by the extending component as a way to update its entry to reflect

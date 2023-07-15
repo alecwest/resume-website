@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { CdsIconModule } from "@cds/angular";
-import { AuthenticatorService } from "@aws-amplify/ui-angular";
+import { AuthenticatorService } from "../authenticator.service";
 import { FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
-import { SavableComponent } from '../savable/savable.component';
+import { SavableComponent } from "../savable/savable.component";
 
 @Component({
   selector: "app-editable",
@@ -12,7 +12,7 @@ import { SavableComponent } from '../savable/savable.component';
   template: `
     <ng-template #editButton>
       <button
-        *ngIf="authenticated"
+        *ngIf="canEdit"
         class="btn btn-link"
         style="margin: 0"
         (click)="onEditCancelClick()"
@@ -22,7 +22,10 @@ import { SavableComponent } from '../savable/savable.component';
       </button>
     </ng-template>
     <ng-container *ngIf="editForm && savable; else editButton">
-      <app-savable [saveForm]="editForm" (cancelClick)="onEditCancelClick()"></app-savable>
+      <app-savable
+        [saveForm]="editForm"
+        (cancelClick)="onEditCancelClick()"
+      ></app-savable>
     </ng-container>
   `,
   styles: [],
@@ -40,9 +43,8 @@ export class EditableComponent {
   @Input()
   savable: boolean;
 
-  // TODO this could be a directive
-  protected get authenticated() {
-    return this.authenticator.authStatus === "authenticated";
+  protected get canEdit() {
+    return this.authenticator.canEdit;
   }
 
   constructor(private authenticator: AuthenticatorService) {}

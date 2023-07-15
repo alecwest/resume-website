@@ -1,14 +1,14 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnDestroy } from "@angular/core";
-import { AuthenticatorService } from '@aws-amplify/ui-angular';
+import { AuthenticatorService } from "../authenticator.service";
 import { CdsModule } from "@cds/angular";
 import { ClarityModule } from "@clr/angular";
 import { Observable, Subject } from "rxjs";
 import { map, takeUntil } from "rxjs/operators";
-import { ResumeEntry } from '../api/v1';
+import { ResumeEntry } from "../api/v1";
 import { CardComponent } from "../card/card.component";
 import { ResumeEntriesByType } from "../models";
-import { NewEntryComponent } from '../new-entry/new-entry.component';
+import { NewEntryComponent } from "../new-entry/new-entry.component";
 import { ResumeDataService } from "../resume-data.service";
 
 @Component({
@@ -16,14 +16,18 @@ import { ResumeDataService } from "../resume-data.service";
   selector: "app-profile",
   templateUrl: "./profile.component.html",
   styleUrls: ["./profile.component.scss"],
-  imports: [CdsModule, CommonModule, ClarityModule, CardComponent, NewEntryComponent],
+  imports: [
+    CdsModule,
+    CommonModule,
+    ClarityModule,
+    CardComponent,
+    NewEntryComponent,
+  ],
 })
 export class ProfileComponent implements OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
 
-  entriesByType$: Observable<
-    ResumeEntriesByType
-  > = this.resumeDataService
+  entriesByType$: Observable<ResumeEntriesByType> = this.resumeDataService
     .getEntriesByType("alecwest")
     .pipe(takeUntil(this.destroy$));
 
@@ -37,19 +41,14 @@ export class ProfileComponent implements OnDestroy {
     )
   );
 
-  get user() {
-    return this.authenticator.user;
-  }
-
-  get authenticated(): boolean {
-    return this.authenticator.authStatus === 'authenticated';
+  get canEdit(): boolean {
+    return this.authenticator.canEdit;
   }
 
   constructor(
     private resumeDataService: ResumeDataService,
     private authenticator: AuthenticatorService
   ) {}
-
 
   ngOnDestroy(): void {
     this.destroy$.next(true);

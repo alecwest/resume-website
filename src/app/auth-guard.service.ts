@@ -1,21 +1,27 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router, UrlTree } from '@angular/router';
-import { AuthenticatorService } from '@aws-amplify/ui-angular';
-import { Observable } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { CanActivate, Router, UrlTree } from "@angular/router";
+import { AuthenticatorService } from "./authenticator.service";
+import { Observable } from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class AuthGuardService implements CanActivate {
+  constructor(
+    private router: Router,
+    private authenticator: AuthenticatorService
+  ) {}
 
-  constructor(private router: Router, private authenticator: AuthenticatorService) { }
-
-  canActivate(): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-      if (this.authenticator.authStatus === 'authenticated') {
-        return true;
-      } else {
-        this.router.navigate(["login"]);
-        return false;
-      }
+  canActivate():
+    | boolean
+    | UrlTree
+    | Observable<boolean | UrlTree>
+    | Promise<boolean | UrlTree> {
+    if (this.authenticator.authenticated) {
+      return true;
+    } else {
+      this.router.navigate(["login"]);
+      return false;
+    }
   }
 }

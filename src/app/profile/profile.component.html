@@ -21,8 +21,10 @@
       </ng-container>
     </div>
 
-    <div class="clr-row separation" id="add" *ngIf="authenticated">
-      <app-new-entry class="clr-col-lg-8 clr-offset-lg-2 clr-col-12"></app-new-entry>
+    <div class="clr-row separation" id="add" *ngIf="canEdit">
+      <app-new-entry
+        class="clr-col-lg-8 clr-offset-lg-2 clr-col-12"
+      ></app-new-entry>
     </div>
   </div>
 </div>
