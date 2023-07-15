@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, HostBinding, OnInit } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
 import {
   AmplifyAuthenticatorModule,
@@ -13,6 +13,8 @@ import {
   imports: [AmplifyAuthenticatorModule, RouterModule],
 })
 export class LoginComponent implements OnInit {
+  @HostBinding('class') classes = 'content-container';
+
   private redirectPath: string;
 
   constructor(

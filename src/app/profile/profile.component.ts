@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnDestroy } from "@angular/core";
+import { Component, HostBinding, OnDestroy } from "@angular/core";
 import { AuthenticatorService } from "../authenticator.service";
 import { CdsModule } from "@cds/angular";
 import { ClarityModule } from "@clr/angular";
@@ -25,6 +25,8 @@ import { ResumeDataService } from "../resume-data.service";
   ],
 })
 export class ProfileComponent implements OnDestroy {
+  @HostBinding('class') classes = 'content-container';
+
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   entriesByType$: Observable<ResumeEntriesByType> = this.resumeDataService

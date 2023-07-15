@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuardService } from './auth-guard.service';
-import { EditComponent } from './edit/edit.component';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
+import { NavComponent } from './nav/nav.component';
 
 
 const routes: Routes = [
@@ -12,14 +11,20 @@ const routes: Routes = [
     loadComponent: () => ProfileComponent
   },
   {
+    path: "",
+    loadComponent: () => NavComponent,
+    outlet: 'subnav'
+  },
+  {
     path: "login",
     loadComponent: () => LoginComponent
   },
-  {
-    path: "edit",
-    loadComponent: () => EditComponent,
-    canActivate: [AuthGuardService]
-  }
+  // TODO disabled until deemed useful
+  // {
+  //   path: "edit",
+  //   loadComponent: () => EditComponent,
+  //   canActivate: [AuthGuardService]
+  // }
 ];
 
 @NgModule({

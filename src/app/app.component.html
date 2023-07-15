@@ -22,13 +22,13 @@
             <cds-icon shape="angle" direction="down"></cds-icon>
           </button>
           <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
-            <a routerLink="edit" clrDropdownItem>Edit</a>
+            <!-- <a routerLink="edit" clrDropdownItem>Edit</a> -->
             <button (click)="onLogoutClick()" clrDropdownItem>Log out</button>
           </clr-dropdown-menu>
         </clr-dropdown>
       </ng-template>
     </div>
   </clr-header>
-
-  <router-outlet></router-outlet>
+  <router-outlet name="subnav"></router-outlet>
+  <router-outlet name="primary"></router-outlet>
 </clr-main-container>
