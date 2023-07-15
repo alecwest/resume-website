@@ -1,21 +1,26 @@
-<div class="content-area">
-  <div
-    class="clr-row separation"
-    [id]="type"
-    *ngFor="let type of entryTypes | async"
-  >
-    <ng-container *ngIf="entriesByType$ | async as entriesByType">
-      <app-card
-        class="clr-col-lg-8 clr-offset-lg-2 clr-col-12"
-        [resumeEntries]="entriesByType[type]"
-      ></app-card>
-    </ng-container>
-  </div>
+<clr-main-container>
+  <app-header></app-header>
+  <app-nav></app-nav>
+  <div class="content-container">
+    <div class="content-area">
+      <div
+        class="clr-row separation"
+        [id]="type"
+        *ngFor="let type of entryTypes | async"
+      >
+        <ng-container *ngIf="entriesByType$ | async as entriesByType">
+          <app-card
+            class="clr-col-lg-8 clr-offset-lg-2 clr-col-12"
+            [resumeEntries]="entriesByType[type]"
+          ></app-card>
+        </ng-container>
+      </div>
 
-  <div class="clr-row separation" id="add" *ngIf="canEdit">
-    <app-new-entry
-      class="clr-col-lg-8 clr-offset-lg-2 clr-col-12"
-    ></app-new-entry>
+      <div class="clr-row separation" id="add" *ngIf="canEdit">
+        <app-new-entry
+          class="clr-col-lg-8 clr-offset-lg-2 clr-col-12"
+        ></app-new-entry>
+      </div>
+    </div>
   </div>
-</div>
-
+</clr-main-container>

@@ -25,9 +25,9 @@ export class AuthenticatorService {
     return (
       this.authenticated &&
       this.authenticator.user
-        .getSignInUserSession()
-        .getAccessToken()
-        .payload["cognito:groups"].includes("entry/edit/any")
+        ?.getSignInUserSession()
+        ?.getAccessToken()
+        ?.payload["cognito:groups"]?.includes("entry/edit/any")
     );
   }
 }
