@@ -24,6 +24,10 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 # Notes:
 
+## OAuth Configuration
+
+There is a workaround in place in `main.ts` to support working in both a local dev environment (with localhost redirects) and production (with my actual website).
+
 ## Permissions
 
 Within the `resumewebsite-staging` User Pool, users that are part of the `cognito:groups` group `entry/edit/any` will be able to create, edit, and delete entries. This is essentially an ADMIN group.
