@@ -69,6 +69,6 @@
     },
     "breakCircularDependency": true,
     "dependsOn": [],
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://alecnwest.com/\",\"https://www.alecnwest.com/\"],\"LogoutURLs\":[\"https://alecnwest.com/\",\"https://www.alecnwest.com/\"]}"
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://localhost:4200/\",\"https://www.alecnwest.com/\"],\"LogoutURLs\":[\"https://localhost:4200/\",\"https://www.alecnwest.com/\"]}"
   }
 }
