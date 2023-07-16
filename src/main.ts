@@ -11,8 +11,9 @@ import {
   loginIcon,
   pencilIcon,
   banIcon,
+  pdfFileIcon,
 } from "@cds/core/icon";
-ClarityIcons.addIcons(flameIcon, loginIcon, pencilIcon, banIcon);
+ClarityIcons.addIcons(flameIcon, loginIcon, pencilIcon, banIcon, pdfFileIcon);
 
 // Load AWS Amplify
 import { Amplify } from "aws-amplify";

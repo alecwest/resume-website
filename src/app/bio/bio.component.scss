@@ -1,5 +1,10 @@
+.headshot {
+  margin: auto;
+}
+
 .headshot-image {
-  width: 12rem;
+  width: -webkit-fill-available;
+  max-width: 12rem;
   display: block;
   margin: auto;
   border-radius: 100%;

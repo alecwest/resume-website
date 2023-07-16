@@ -1,29 +1,45 @@
 import { CommonModule, TitleCasePipe } from "@angular/common";
 import { ChangeDetectorRef, Component, Input, ViewChild } from "@angular/core";
-import { FormControl, FormGroupDirective, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {
+  FormControl,
+  FormGroupDirective,
+  FormsModule,
+  ReactiveFormsModule,
+} from "@angular/forms";
 import { ResumeEntry } from "../api/v1";
 import { Editable } from "../editable";
 import { EditableComponent } from "../editable/editable.component";
-import { ResumeDataService } from '../resume-data.service';
-import { SavableComponent } from '../savable/savable.component';
+import { ResumeDataService } from "../resume-data.service";
+import { SavableComponent } from "../savable/savable.component";
 
 @Component({
   standalone: true,
   selector: "app-rank",
   templateUrl: "./rank.component.html",
   styleUrls: ["./rank.component.scss"],
-  imports: [TitleCasePipe, CommonModule, EditableComponent, SavableComponent, FormsModule, ReactiveFormsModule],
+  imports: [
+    TitleCasePipe,
+    CommonModule,
+    EditableComponent,
+    SavableComponent,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
 })
 export class RankComponent extends Editable {
   @Input()
   resumeEntries: ResumeEntry[];
 
-  @ViewChild('rankEditForm', { static: false })
+  @ViewChild("rankEditForm", { static: false })
   rankEditForm: FormGroupDirective;
+
+  get sortedEntries(): ResumeEntry[] {
+    return this.sorted(this.resumeEntries);
+  }
 
   constructor(
     resumeDataService: ResumeDataService,
-    changeDetectorRef: ChangeDetectorRef
+    changeDetectorRef: ChangeDetectorRef,
   ) {
     super(resumeDataService, changeDetectorRef);
   }
@@ -40,7 +56,9 @@ export class RankComponent extends Editable {
   }
 
   afterSubmit(updatedEntry: ResumeEntry): void {
-    const oldEntryIndex = this.resumeEntries.findIndex(oldEntry => oldEntry.id === updatedEntry.id);
+    const oldEntryIndex = this.resumeEntries.findIndex(
+      (oldEntry) => oldEntry.id === updatedEntry.id,
+    );
     this.resumeEntries[oldEntryIndex] = updatedEntry;
   }
 }
