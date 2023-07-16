@@ -12,6 +12,7 @@ import { ResumeEntriesByType } from "../models";
 import { NavComponent } from "../nav/nav.component";
 import { NewEntryComponent } from "../new-entry/new-entry.component";
 import { ResumeDataService } from "../resume-data.service";
+import { environment } from "src/environments/environment";
 
 @Component({
   standalone: true,
@@ -49,6 +50,11 @@ export class ProfileComponent implements OnDestroy {
 
   get canEdit(): boolean {
     return this.authenticator.canEdit;
+  }
+
+  get resumeUrl(): string {
+    const year = new Date().getFullYear();
+    return `${environment.resumeBucket}Alec_West/Alec_West_Resume_${year}.pdf`;
   }
 
   constructor(

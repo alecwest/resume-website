@@ -3,3 +3,10 @@
   display: flex;
   align-items: center;
 }
+
+.resume-btn {
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+  z-index: 10000;
+}
